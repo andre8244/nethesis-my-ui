@@ -5,11 +5,24 @@
 
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { useThemeStore } from './stores/theme'
+import { onMounted } from 'vue'
+import { NeButton } from '@nethesis/vue-components'
+
+const themeStore = useThemeStore()
+
+onMounted(() => {
+  // console.log('%c' + welcomeMsg, 'background: #0069a8; color: white;') ////
+  themeStore.loadTheme()
+})
 </script>
 
 <template>
-  <div>
-    <nav>
+  <div class="flex flex-col items-start gap-4 p-4">
+    <NeButton kind="primary" @click="themeStore.toggleTheme">
+      Toggle theme, current: {{ themeStore.theme }}
+    </NeButton>
+    <nav class="flex gap-4">
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/about">About</RouterLink>
     </nav>

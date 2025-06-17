@@ -10,5 +10,5 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons'
 
 <template>
   <div>Home</div>
-  <FontAwesomeIcon :icon="faHouse" class="text-primary-700 h-16 w-16" />
+  <FontAwesomeIcon :icon="faHouse" class="text-primary-700 dark:text-primary-500 h-16 w-16" />
 </template>
