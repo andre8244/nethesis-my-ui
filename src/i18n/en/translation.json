@@ -1,0 +1,30 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search",
+    "help": "Help",
+    "optional": "Optional",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "filter": "Filter",
+    "advanced_settings": "Advanced settings",
+    "enable": "Enable",
+    "disable": "Disable",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "step": "Step",
+    "previous": "Previous",
+    "next": "Next",
+    "copied": "Copied!",
+    "status": "Status",
+    "any": "Any",
+    "clear_filter": "Clear filter",
+    "clear_filters": "Clear filters",
+    "try_changing_search_filters": "Try changing your search filters",
+    "go_to_page": "Go to {page}",
+    "no_data_available": "No data available"
+  },
+  "shell": {}
+}
