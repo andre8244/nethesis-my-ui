@@ -26,5 +26,16 @@
     "go_to_page": "Go to {page}",
     "no_data_available": "No data available"
   },
-  "shell": {}
+  "shell": {
+    "close_sidebar": "Close sidebar"
+  },
+  "dashboard": {
+    "title": "Dashboard"
+  },
+  "test": {
+    "title": "Test ////"
+  },
+  "subtest": {
+    "title": "Sub-test ////"
+  }
 }

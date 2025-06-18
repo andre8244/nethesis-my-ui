@@ -9,7 +9,7 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons'
 </script>
 
 <template>
-  <div>Home</div>
+  <div>Home ////</div>
   <FontAwesomeIcon :icon="faHouse" class="text-primary-700 dark:text-primary-500 h-16 w-16" />
   {{ $t('common.cancel') }}
 </template>

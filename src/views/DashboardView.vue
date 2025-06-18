@@ -5,7 +5,7 @@
 
 <script setup lang="ts"></script>
 <template>
-  <div>About ////</div>
+  <div>DashboardView ////</div>
 </template>
 
 <style scoped></style>

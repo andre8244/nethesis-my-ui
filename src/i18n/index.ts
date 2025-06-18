@@ -25,7 +25,8 @@ const i18n = createI18n({
   fallbackLocale: DEFAULT_LOCALE,
   availableLocales: SUPPORTED_LOCALES,
   legacy: false, // use composition API mode
-  // globalInjection: true, // enable global $t ////
+  fallbackWarn: false,
+  missingWarn: false,
   messages: {}, // start empty, load dynamically
 })
 

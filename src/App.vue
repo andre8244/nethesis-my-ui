@@ -8,6 +8,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import { useThemeStore } from './stores/theme'
 import { onMounted } from 'vue'
 import { NeButton } from '@nethesis/vue-components'
+import AppShell from '@/components/AppShell.vue'
 
 const themeStore = useThemeStore()
 
@@ -18,7 +19,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-start gap-4 p-4">
+  <AppShell />
+  <!-- <div class="flex flex-col items-start gap-4 p-4"> ////
     <NeButton kind="primary" @click="themeStore.toggleTheme">
       Toggle theme, current: {{ themeStore.theme }}
     </NeButton>
@@ -29,7 +31,7 @@ onMounted(() => {
     <main>
       <RouterView />
     </main>
-  </div>
+  </div> -->
 </template>
 
 <style scoped></style>
