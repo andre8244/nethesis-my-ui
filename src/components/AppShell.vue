@@ -17,6 +17,7 @@ import LogoLight from '@/assets/logo_light.svg'
 import LogoDark from '@/assets/logo_dark.svg'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import TopBar from './TopBar.vue'
 
 //// review
 
@@ -97,7 +98,7 @@ const logoFile = computed(() => {
                 <nav class="flex flex-1 flex-col">
                   <ul role="list" class="flex flex-1 flex-col gap-y-7">
                     <li>
-                      <ul role="list" class="space-y-1">
+                      <ul role="list" class="space-y-2">
                         <SideMenu />
                       </ul>
                     </li>
@@ -117,7 +118,7 @@ const logoFile = computed(() => {
         class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-2 pb-4 dark:border-gray-700 dark:bg-gray-950"
       >
         <div class="flex h-16 shrink-0 items-center">
-          <img class="h-8 w-auto px-3" :src="logoFile" :alt="`${getProductName()} logo`" />
+          <img class="h-7 w-auto px-3" :src="logoFile" :alt="`${getProductName()} logo`" />
         </div>
         <nav class="flex flex-1 flex-col">
           <ul role="list" class="flex flex-1 flex-col gap-y-7">
@@ -132,7 +133,7 @@ const logoFile = computed(() => {
     </div>
 
     <div class="lg:pl-72">
-      <!-- <TopBar @open-sidebar="sidebarOpen = true" /> //// -->
+      <TopBar @open-sidebar="sidebarOpen = true" />
       <main class="py-10">
         <div class="px-4 sm:px-6 lg:px-8">
           <RouterView />

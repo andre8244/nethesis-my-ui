@@ -3,8 +3,8 @@
 
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-
-//// get/set theme from localStorage
+import { useLoginStore } from './login'
+import { getPreference, getStringFromStorage, savePreference } from '@nethesis/vue-components'
 
 type Theme = 'light' | 'dark' | 'system'
 
@@ -31,6 +31,13 @@ export const useThemeStore = defineStore('theme', () => {
   function setTheme(newTheme: Theme) {
     theme.value = newTheme
 
+    // save preference
+    const username = getUsername()
+
+    if (username) {
+      savePreference('theme', newTheme, username)
+    }
+
     // add or remove dark class to document
 
     switch (newTheme) {
@@ -51,8 +58,6 @@ export const useThemeStore = defineStore('theme', () => {
   }
 
   function toggleTheme() {
-    console.log('toggling theme, current:', theme.value) ////
-
     switch (theme.value) {
       case 'light':
         setTheme('dark')
@@ -79,13 +84,23 @@ export const useThemeStore = defineStore('theme', () => {
   }
 
   function loadTheme() {
-    // const username = getUsername() ////
-    const theme = 'system' as Theme
+    const username = getUsername()
+    let theme = 'system' as Theme
 
-    // if (username) { ////
-    //   theme = getPreference('theme', username)
-    // }
+    if (username) {
+      theme = getPreference('theme', username)
+    }
     setTheme(theme)
+  }
+
+  function getUsername() {
+    let username = useLoginStore().username
+
+    if (!username) {
+      // user is not logged, try reading remembered username from local storage
+      username = getStringFromStorage('username') || ''
+    }
+    return username
   }
 
   return { theme, isLight, setTheme, toggleTheme, loadTheme }

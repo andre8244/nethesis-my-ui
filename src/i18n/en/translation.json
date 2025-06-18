@@ -3,7 +3,6 @@
     "save": "Save",
     "cancel": "Cancel",
     "search": "Search",
-    "help": "Help",
     "optional": "Optional",
     "close": "Close",
     "edit": "Edit",
@@ -27,7 +26,18 @@
     "no_data_available": "No data available"
   },
   "shell": {
-    "close_sidebar": "Close sidebar"
+    "open_sidebar": "Open sidebar",
+    "close_sidebar": "Close sidebar",
+    "show_notifications": "Show notifications",
+    "open_account_menu": "Open account menu",
+    "account": "Account",
+    "help": "Help",
+    "toggle_theme": "Toggle theme"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "no_notification": "No notifications yet",
+    "show_details": "Show details"
   },
   "dashboard": {
     "title": "Dashboard"
