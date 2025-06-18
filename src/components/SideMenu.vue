@@ -7,7 +7,7 @@
 import { useLoginStore } from '@/stores/login'
 import { getPreference, savePreference } from '@nethesis/vue-components'
 import isEmpty from 'lodash/isEmpty'
-import { onMounted, ref, type Ref } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -33,6 +33,7 @@ type MenuItem = {
 const { t } = useI18n()
 const route = useRoute()
 const loginStore = useLoginStore()
+const menuItemsExpandedLoaded = ref(false)
 
 const menuExpanded: Ref<Record<string, boolean>> = ref({
   test: false, ////
@@ -111,12 +112,15 @@ const navigation: Ref<MenuItem[]> = ref([
   // },
 ])
 
-onMounted(() => {
-  // wait for route.path //// todo use route watch instead
-  setTimeout(() => {
-    loadMenuItemsExpanded()
-  }, 500)
-})
+watch(
+  () => route.path,
+  (path) => {
+    if (path && path !== '/' && !menuItemsExpandedLoaded.value) {
+      loadMenuItemsExpanded()
+    }
+  },
+  { immediate: true },
+)
 
 function isCurrentRoute(itemPath: string) {
   return route.path.includes(itemPath)
@@ -136,6 +140,7 @@ function loadMenuItemsExpanded() {
       menuExpanded.value[menuName] = true
     }
   }
+  menuItemsExpandedLoaded.value = true
 }
 </script>
 
