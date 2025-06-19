@@ -32,7 +32,13 @@
     "open_account_menu": "Open account menu",
     "account": "Account",
     "help": "Help",
-    "toggle_theme": "Toggle theme"
+    "toggle_theme": "Toggle theme",
+    "sign_out": "Sign out"
+  },
+  "login": {
+    "welcome_title": "Welcome",
+    "welcome_description": "Sign in to {product} Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "sign_in": "Sign in"
   },
   "notifications": {
     "title": "Notifications",

@@ -14,16 +14,20 @@ import {
   faChevronDown,
   faCircleUser,
   faMoon,
+  faRightFromBracket,
   faSun,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useI18n } from 'vue-i18n'
+import { useLogto } from '@logto/vue'
+import { SIGN_OUT_REDIRECT_URI } from '@/lib/config'
 
 const emit = defineEmits(['openSidebar'])
 
 const { t } = useI18n()
 // const loginStore = useLoginStore() ////
 const themeStore = useThemeStore()
+const { signIn, signOut, isAuthenticated } = useLogto()
 // const notificationsStore = useNotificationsStore() ////
 
 const topBarButtonsColorClasses =
@@ -44,12 +48,12 @@ const accountMenuOptions = computed(() => {
       icon: themeStore.isLight ? faMoon : faSun,
       action: themeStore.toggleTheme,
     },
-    //   {
-    //     id: 'logout',
-    //     label: t('shell.sign_out'),
-    //     icon: faRightFromBracket,
-    //     action: loginStore.logout,
-    //   },
+    {
+      id: 'logout',
+      label: t('shell.sign_out'),
+      icon: faRightFromBracket,
+      action: () => signOut(SIGN_OUT_REDIRECT_URI),
+    },
   ]
 })
 
@@ -92,8 +96,11 @@ function openNotificationsDrawer() {
     <div class="h-6 w-px bg-gray-200 lg:hidden dark:bg-gray-700" aria-hidden="true" />
 
     <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-      <div class="relative flex flex-1">
+      <div class="relative flex flex-1 items-center">
         <!-- global search -->
+        <!-- //// remove -->
+        <div v-if="isAuthenticated" class="text-green-600">logged in</div>
+        <div v-else class="text-amber-600">logged out</div>
       </div>
       <!-- unsaved changes button -->
       <div class="flex items-center gap-x-4 lg:gap-x-6">

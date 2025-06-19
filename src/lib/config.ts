@@ -1,35 +1,17 @@
 //  Copyright (C) 2025 Nethesis S.r.l.
 //  SPDX-License-Identifier: GPL-3.0-or-later
 
-////
-// export const getStandaloneApiEndpoint = () => {
-//   if (!isStandaloneMode()) {
-//     // a controller is managing this unit
-//     return getUnitManagementApiEndpoint()
-//   }
+export const PRODUCT_NAME = 'My Nethesis' ////
 
-//   if (import.meta.env.DEV) {
-//     // standalone development environment
+// path requested by the OIDC provider to redirect the user after a successful login
+export const LOGIN_REDIRECT_URI = `${window.location.origin}/login-redirect`
 
-//     const apiScheme = import.meta.env.VITE_API_SCHEME
-//     const standaloneApiHost = import.meta.env.VITE_STANDALONE_API_HOST
-//     return `${apiScheme}://${standaloneApiHost}/api`
-//   } else {
-//     // standalone production environment
+// go to the login page after a successful sign out
+export const SIGN_OUT_REDIRECT_URI = `${window.location.origin}/login`
 
-//     return (
-//       window.location.protocol +
-//       '//' +
-//       window.location.hostname +
-//       (window.location.port ? ':' + window.location.port : '') +
-//       '/api'
-//     )
-//   }
-// }
-
-export const getProductName = () => {
-  return 'My Nethesis' ////
-}
+// logto configuration
+export const LOGTO_ENDPOINT = 'https://y4uj0v.logto.app/' ////
+export const LOGTO_APP_ID = 'rxyleex2q6ixj4ne6s9is' ////
 
 ////
 // export const getProductUrl = () => {
