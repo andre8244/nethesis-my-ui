@@ -6,8 +6,10 @@ import { defineStore } from 'pinia'
 import isEmpty from 'lodash/isEmpty'
 import { getJsonFromStorage } from '@nethesis/vue-components'
 
-//// needed?
-export const TOKEN_REFRESH_INTERVAL = 1000 * 60 * 30 // half an hour
+export type LoggedUser = {
+  username: string
+  name: string
+}
 
 export const useLoginStore = defineStore('login', () => {
   const username = ref('test') //// set to '' initially

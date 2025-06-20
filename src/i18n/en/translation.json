@@ -23,6 +23,7 @@
     "clear_filters": "Clear filters",
     "try_changing_search_filters": "Try changing your search filters",
     "go_to_page": "Go to {page}",
+    "open_page": "Open {page}",
     "no_data_available": "No data available"
   },
   "shell": {
@@ -46,7 +47,16 @@
     "show_details": "Show details"
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "welcome_user": "Welcome {user}",
+    "warehouse": "Warehouse",
+    "warehouse_description": "Check product inventory",
+    "nethshop": "NethShop",
+    "nethshop_description": "Browse and order Nethesis products",
+    "helpdesk": "Helpdesk",
+    "helpdesk_description": "Get support, open and manage tickets",
+    "training_portal": "Training portal",
+    "training_portal_description": "Access training materials and courses"
   },
   "test": {
     "title": "Test ////"
