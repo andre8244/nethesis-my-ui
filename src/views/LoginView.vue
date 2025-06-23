@@ -40,13 +40,13 @@ const login = () => signIn(LOGIN_REDIRECT_URI)
 </script>
 
 <template>
+  <!-- ////  -->
   <div class="bg-primary-600 fixed top-0 left-0 h-screen w-screen">
     <div class="flex h-full flex-col items-center justify-center">
       <!-- loader -->
       <img class="animate-spin-relaxed mb-14 h-16 w-16" :src="Loader" alt="" aria-hidden="true" />
       <!-- logo -->
       <img :src="LoginLogo" alt="" aria-hidden="true" class="mb-14 h-14" />
-      <!-- <p>{{ $t('login.finish_message') }}</p> ////  -->
     </div>
   </div>
   <!-- //// -->
@@ -64,17 +64,17 @@ const login = () => signIn(LOGIN_REDIRECT_URI)
           </NeHeading>
           <div class="mb-6 text-sm text-gray-700 dark:text-gray-100">
             {{ $t('login.welcome_description', { product: PRODUCT_NAME }) }}
-          </div>
-          <NeButton kind="primary" size="lg" type="submit" class="w-full" @click.prevent="login">
-            <template #prefix>
-              <FontAwesomeIcon :icon="faArrowRightToBracket" aria-hidden="true" />
-            </template>
-            {{ $t('login.sign_in') }}
-          </NeButton>
-        </div>
+          </div> -->
+  <!-- <NeButton kind="primary" size="lg" type="submit" class="w-full" @click.prevent="login">
+    <template #prefix>
+      <FontAwesomeIcon :icon="faArrowRightToBracket" aria-hidden="true" />
+    </template>
+    {{ $t('login.sign_in') }}
+  </NeButton> -->
+  <!-- </div>
       </div>
-    </div>
-    <div
+    </div> -->
+  <!-- <div
       class="to-primary-800 relative hidden w-0 flex-1 items-center justify-center bg-linear-to-t from-gray-950 lg:flex"
     >
       <img

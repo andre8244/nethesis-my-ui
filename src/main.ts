@@ -6,7 +6,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { config as fontawesomeConfig } from '@fortawesome/fontawesome-svg-core'
-import { createLogto, type LogtoConfig } from '@logto/vue'
+import { createLogto, type LogtoConfig, UserScope } from '@logto/vue'
 
 import App from './App.vue'
 import router from './router'
@@ -20,6 +20,25 @@ fontawesomeConfig.autoAddCss = false
 const logtoConfig: LogtoConfig = {
   endpoint: LOGTO_ENDPOINT,
   appId: LOGTO_APP_ID,
+  scopes: [
+    UserScope.Organizations,
+    UserScope.Roles,
+    UserScope.OrganizationRoles,
+    UserScope.CustomData,
+    UserScope.Profile,
+    // 'backup:systems', ////
+    // 'create:systems',
+    // 'create:customers',
+    // 'test:asdf',
+  ],
+  resources: [
+    'https://y4uj0v.logto.app/api',
+    'https://dev.my.nethesis.it/api/systems',
+    'https://dev.my.nethesis.it/api/distributors',
+    'https://dev.my.nethesis.it/api/resellers',
+    'https://dev.my.nethesis.it/api/customers',
+  ], //// ?
+  includeReservedScopes: true,
 }
 
 const app = createApp(App)

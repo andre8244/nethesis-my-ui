@@ -10,8 +10,11 @@ export const LOGIN_REDIRECT_URI = `${window.location.origin}/login-redirect`
 export const SIGN_OUT_REDIRECT_URI = `${window.location.origin}/login`
 
 // logto configuration
-export const LOGTO_ENDPOINT = 'https://y4uj0v.logto.app/' ////
-export const LOGTO_APP_ID = 'rxyleex2q6ixj4ne6s9is' ////
+export const LOGTO_ENDPOINT = 'https://y4uj0v.logto.app/'
+//// frontend app
+export const LOGTO_APP_ID = 'rxyleex2q6ixj4ne6s9is'
+//// backend app
+// export const LOGTO_APP_ID = 'yaw9rnnt96w5y5c6qkqxf' ////
 
 ////
 // export const getProductUrl = () => {

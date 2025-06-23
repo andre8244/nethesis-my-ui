@@ -4,22 +4,41 @@
 -->
 
 <script setup lang="ts">
-import type { LoggedUser } from '@/stores/login'
 import {
   faArrowUpRightFromSquare,
   faAward,
-  faCrown,
   faHeadset,
   faShop,
   faWarehouse,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { useLogto } from '@logto/vue'
-import { NeBadge, NeButton, NeCard, NeHeading, NeRoundedIcon } from '@nethesis/vue-components'
-import { onMounted, ref } from 'vue'
+import { useLogto, type UserInfoResponse } from '@logto/vue'
+import {
+  NeAvatar,
+  NeBadge,
+  NeButton,
+  NeCard,
+  NeHeading,
+  NeRoundedIcon,
+} from '@nethesis/vue-components'
+import { computed, onMounted, ref } from 'vue'
 
-const { signIn, signOut, isAuthenticated, getIdTokenClaims } = useLogto() ////
-const user = ref<LoggedUser>()
+const {
+  signIn,
+  signOut,
+  isAuthenticated,
+  getIdTokenClaims,
+  getIdToken,
+  getOrganizationTokenClaims,
+  getAccessTokenClaims,
+  fetchUserInfo,
+  getAccessToken,
+} = useLogto() ////
+
+const userInfo = ref<UserInfoResponse>()
+
+const userName = computed(() => userInfo.value?.name || userInfo.value?.username || '')
+
 const onClickSignIn = () => signIn('http://localhost:5173/login-redirect')
 const onClickSignOut = () => signOut('http://localhost:5173/')
 
@@ -34,9 +53,37 @@ onMounted(async () => {
 
     console.log('claims', claims) ////
 
-    const username = claims?.username || ''
-    const name = claims?.name || claims?.username || ''
-    user.value = { username, name }
+    //// retrieve user token
+    const idToken = await getIdToken()
+    console.log('idToken', idToken)
+
+    const organizations = claims?.organizations
+
+    const orgClaims = await getOrganizationTokenClaims(organizations?.[0] || '')
+    console.log('orgClaims', orgClaims) ////
+
+    const accessTokenClaims = await getAccessTokenClaims() ////
+    console.log('accessTokenClaims', accessTokenClaims) ////
+
+    const accessTokenClaimsForSystems = await getAccessTokenClaims(
+      'https://dev.my.nethesis.it/api/systems',
+    ) ////
+
+    console.log('accessTokenClaimsForSystems', accessTokenClaimsForSystems) ////
+
+    const fetchedUserInfo = await fetchUserInfo()
+    console.log('user info ', fetchedUserInfo) ////
+
+    // const username = fetchedUserInfo?.username || ''
+    // const name = fetchedUserInfo?.name || fetchedUserInfo?.username || ''
+
+    // user.value = { username, name, organization_data: fetchedUserInfo?.organization_data } ////
+
+    userInfo.value = fetchedUserInfo
+
+    // const accessToken = await getAccessToken('https://dev.my.nethesis.it/api/systems') ////
+
+    // console.log('accessToken', accessToken) ////
   }
 })
 </script>
@@ -49,15 +96,16 @@ onMounted(async () => {
       <NeCard>
         <div class="flex items-start gap-5">
           <!-- <div class="size-12 shrink-0 rounded-full bg-gray-500"></div> //// -->
-          <NeRoundedIcon
+          <!-- <NeRoundedIcon
             :customIcon="faCrown"
             customBackgroundClasses="bg-gray-200 dark:bg-gray-800"
             customForegroundClasses="text-gray-700 dark:text-gray-50"
             class="size-12! shrink-0"
-          />
+          /> -->
+          <NeAvatar size="lg" :initials="userName?.charAt(0)" aria-hidden="true" />
           <div class="flex flex-col gap-2">
             <NeHeading tag="h5">
-              {{ $t('dashboard.welcome_user', { user: user?.name || user?.username }) }}
+              {{ $t('dashboard.welcome_user', { user: userName }) }}
             </NeHeading>
             <!-- //// dynamic according to role -->
             <NeBadge text="Nethesis" :icon="faAward" kind="primary" size="xs" />
@@ -123,7 +171,7 @@ onMounted(async () => {
       </NeCard>
       <!-- helpdesk -->
       <NeCard>
-        <div class="flex flex-col items-start gap-3">
+        <div class="flex h-full flex-col items-start gap-3">
           <div class="flex items-center gap-3">
             <NeRoundedIcon
               :customIcon="faHeadset"
@@ -147,7 +195,7 @@ onMounted(async () => {
       </NeCard>
       <!-- training portal -->
       <NeCard>
-        <div class="flex flex-col items-start gap-3">
+        <div class="flex h-full flex-col items-start gap-3">
           <div class="flex items-center gap-3">
             <NeRoundedIcon
               :customIcon="faHeadset"

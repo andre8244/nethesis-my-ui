@@ -20,7 +20,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@logto/vue": "^3.0.8",
     "@nethesis/nethesis-light-svg-icons": "github:nethesis/Font-Awesome#ns-light",
-    "@nethesis/vue-components": "^3.0.1",
+    "@nethesis/vue-components": "file:nethesis-vue-components-3.0.6.tgz",
     "@tailwindcss/vite": "^4.1.10",
     "axios": "^1.10.0",
     "lodash": "^4.17.21",

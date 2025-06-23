@@ -6,10 +6,16 @@ import { defineStore } from 'pinia'
 import isEmpty from 'lodash/isEmpty'
 import { getJsonFromStorage } from '@nethesis/vue-components'
 
-export type LoggedUser = {
-  username: string
-  name: string
-}
+// export type LoggedUser = { ////
+//   username: string
+//   name: string
+//   mainOrganization_data: Organization[]
+// }
+
+// export type Organization = { ////
+//   id: string
+//   name: string
+// }
 
 export const useLoginStore = defineStore('login', () => {
   const username = ref('test') //// set to '' initially
