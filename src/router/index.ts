@@ -40,7 +40,7 @@ const router = createRouter({
     },
     {
       path: '/test/subtest',
-      name: 'testSubtest',
+      name: 'subtest',
       component: () => import('../views/SubTestView.vue'),
     },
   ],

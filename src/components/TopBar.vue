@@ -4,34 +4,29 @@
 -->
 
 <script setup lang="ts">
-// import { useNotificationsStore } from '@/stores/notifications' ////
-import { NeDropdown, NeTooltip } from '@nethesis/vue-components'
+import { NeAvatar, NeDropdown, NeTooltip } from '@nethesis/vue-components'
 import { computed, ref } from 'vue'
 import { useThemeStore } from '@/stores/theme'
+import { useLoginStore } from '@/stores/login'
 import {
   faBars,
   faBell,
   faChevronDown,
-  faCircleUser,
   faMoon,
   faRightFromBracket,
   faSun,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useI18n } from 'vue-i18n'
-import { useLogto } from '@logto/vue'
-import { SIGN_OUT_REDIRECT_URI } from '@/lib/config'
 
 const emit = defineEmits(['openSidebar'])
 
 const { t } = useI18n()
-// const loginStore = useLoginStore() ////
 const themeStore = useThemeStore()
-const { signIn, signOut, isAuthenticated } = useLogto()
-// const notificationsStore = useNotificationsStore() ////
+const loginStore = useLoginStore()
 
 const topBarButtonsColorClasses =
-  'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50'
+  'text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-50 transition-colors duration-300'
 const shakeNotificationsIcon = ref(false)
 
 const accountMenuOptions = computed(() => {
@@ -43,16 +38,10 @@ const accountMenuOptions = computed(() => {
     //     action: () => router.push('/standalone/account'),
     //   },
     {
-      id: 'theme',
-      label: t('shell.toggle_theme'),
-      icon: themeStore.isLight ? faMoon : faSun,
-      action: themeStore.toggleTheme,
-    },
-    {
       id: 'logout',
       label: t('shell.sign_out'),
       icon: faRightFromBracket,
-      action: () => signOut(SIGN_OUT_REDIRECT_URI),
+      action: () => loginStore.logout(),
     },
   ]
 })
@@ -85,7 +74,7 @@ function openNotificationsDrawer() {
   >
     <button
       type="button"
-      class="-m-2.5 p-2.5 text-gray-600 hover:text-gray-900 lg:hidden dark:text-gray-300 dark:hover:text-gray-50"
+      class="-m-2.5 p-2.5 text-gray-600 transition-colors duration-300 hover:text-gray-900 lg:hidden dark:text-gray-300 dark:hover:text-gray-50"
       @click="emit('openSidebar')"
     >
       <span class="sr-only">{{ $t('shell.open_sidebar') }}</span>
@@ -97,9 +86,8 @@ function openNotificationsDrawer() {
 
     <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
       <div class="relative flex flex-1 items-center">
-        <!-- global search -->
         <!-- //// remove -->
-        <div v-if="isAuthenticated" class="text-green-600">logged in</div>
+        <div v-if="loginStore.isAuthenticated" class="text-green-600">logged in</div>
         <div v-else class="text-amber-600">logged out</div>
       </div>
       <!-- unsaved changes button -->
@@ -131,6 +119,31 @@ function openNotificationsDrawer() {
           </template>
         </NeTooltip> //// -->
 
+        <!-- toggle theme -->
+        <NeTooltip trigger-event="mouseenter focus" placement="bottom">
+          <template #trigger>
+            <button
+              type="button"
+              :class="['-m-2.5 flex p-2.5', topBarButtonsColorClasses]"
+              @click="themeStore.toggleTheme"
+            >
+              <span class="sr-only">{{ $t('shell.toggle_theme') }}</span>
+              <FontAwesomeIcon
+                :icon="themeStore.isLight ? faMoon : faSun"
+                class="h-6 w-6 shrink-0"
+                aria-hidden="true"
+              />
+            </button>
+          </template>
+          <template #content>
+            {{
+              themeStore.isLight
+                ? $t('shell.switch_to_dark_theme')
+                : $t('shell.switch_to_light_theme')
+            }}
+          </template>
+        </NeTooltip>
+
         <!-- notifications -->
         <NeTooltip trigger-event="mouseenter focus" placement="bottom">
           <template #trigger>
@@ -161,15 +174,13 @@ function openNotificationsDrawer() {
               :align-to-right="true"
               :open-menu-aria-label="$t('shell.open_account_menu')"
               menu-classes="z-150!"
+              class="relative bottom-0.5"
             >
               <template #button>
                 <button type="button" :class="['-m-2.5 flex p-2.5', topBarButtonsColorClasses]">
                   <div class="flex items-center gap-2">
-                    <FontAwesomeIcon
-                      :icon="faCircleUser"
-                      class="h-6 w-6 shrink-0"
-                      aria-hidden="true"
-                    />
+                    <NeAvatar size="xs" :initials="loginStore.userInitial" aria-hidden="true" />
+
                     <FontAwesomeIcon
                       :icon="faChevronDown"
                       class="h-3 w-3 shrink-0"
@@ -177,6 +188,20 @@ function openNotificationsDrawer() {
                     />
                   </div>
                 </button>
+              </template>
+              <template #menuHeader>
+                <div class="space-y-1 px-4 py-2 text-sm">
+                  <div class="font-medium text-gray-900 dark:text-gray-100">
+                    {{ loginStore.userDisplayName }}
+                  </div>
+                  <div class="text-gray-500 dark:text-gray-400">
+                    {{ loginStore.userInfo?.email }}
+                  </div>
+                  <div class="text-gray-500 dark:text-gray-400">
+                    {{ loginStore.userInfo?.orgRole }}
+                  </div>
+                </div>
+                <hr class="my-1 border-gray-200 dark:border-gray-700" />
               </template>
             </NeDropdown>
           </template>

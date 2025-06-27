@@ -20,8 +20,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { faHouse as falHouse, faGear as falGear } from '@nethesis/nethesis-light-svg-icons'
 
-//// review
-
 type MenuItem = {
   name: string
   to: string
@@ -46,9 +44,9 @@ const menuExpanded: Ref<Record<string, boolean>> = ref({
   // monitoring: false,
 })
 
-//// don't use string icons
 const navigation: Ref<MenuItem[]> = ref([
   { name: 'dashboard.title', to: 'dashboard', solidIcon: fasHouse, lightIcon: falHouse },
+  //// remove test and substest i18n strings
   {
     name: 'test.title',
     to: 'test',

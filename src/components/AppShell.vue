@@ -19,10 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import TopBar from './TopBar.vue'
 
-//// review
-
 const themeStore = useThemeStore()
-// const { t } = useI18n() ////
 
 const sidebarOpen = ref(false)
 

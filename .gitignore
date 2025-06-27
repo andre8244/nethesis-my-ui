@@ -31,3 +31,8 @@ coverage
 
 # Local dependencies (e.g. output of 'npm pack')
 *.tgz
+
+# Development config
+.env*
+!.env.production
+!.env.development.sample

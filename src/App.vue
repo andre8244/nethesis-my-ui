@@ -5,20 +5,29 @@
 
 <script setup lang="ts">
 import { useThemeStore } from './stores/theme'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import AppShell from '@/components/AppShell.vue'
-import { useLogto } from '@logto/vue'
-import { NeButton } from '@nethesis/vue-components'
 import { useRoute } from 'vue-router'
-import { SIGN_OUT_REDIRECT_URI, LOGIN_REDIRECT_URI } from './lib/config'
+import { useTitle } from '@vueuse/core'
+import { PRODUCT_NAME } from './lib/config'
+import { useI18n } from 'vue-i18n'
 
 const themeStore = useThemeStore()
-//// use store instead?
-const { signIn, signOut, isAuthenticated } = useLogto()
 const route = useRoute()
+const { t } = useI18n()
 
-const onClickSignIn = () => signIn(LOGIN_REDIRECT_URI)
-const onClickSignOut = () => signOut(SIGN_OUT_REDIRECT_URI)
+const pageTitle = computed(() => {
+  const routeName = route.name ? String(route.name) : ''
+
+  if (!routeName || routeName === 'login') {
+    return PRODUCT_NAME
+  } else {
+    const i18nPageTitle = t(`${routeName}.title`)
+    return `${i18nPageTitle} - ${PRODUCT_NAME}`
+  }
+})
+
+useTitle(pageTitle)
 
 onMounted(() => {
   // console.log('%c' + welcomeMsg, 'background: #0069a8; color: white;') ////
@@ -28,11 +37,8 @@ onMounted(() => {
 
 <template>
   <div>
-    <!-- <NeButton kind="danger" @click="onClickSignOut">Sign Out</NeButton> //// -->
-    <!-- <div class="text-2xl">isAuthenticated {{ isAuthenticated }}</div>
-    <NeButton kind="danger" @click="onClickSignOut">Sign Out</NeButton>
-    <NeButton v-if="!isAuthenticated" kind="primary" @click="onClickSignIn">Sign In</NeButton> -->
     <AppShell v-if="route.path !== '/login'" />
+    <!-- login page: don't show app shell -->
     <RouterView v-else />
   </div>
 </template>

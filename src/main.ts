@@ -20,25 +20,6 @@ fontawesomeConfig.autoAddCss = false
 const logtoConfig: LogtoConfig = {
   endpoint: LOGTO_ENDPOINT,
   appId: LOGTO_APP_ID,
-  scopes: [
-    UserScope.Organizations,
-    UserScope.Roles,
-    UserScope.OrganizationRoles,
-    UserScope.CustomData,
-    UserScope.Profile,
-    // 'backup:systems', ////
-    // 'create:systems',
-    // 'create:customers',
-    // 'test:asdf',
-  ],
-  resources: [
-    'https://y4uj0v.logto.app/api',
-    'https://dev.my.nethesis.it/api/systems',
-    'https://dev.my.nethesis.it/api/distributors',
-    'https://dev.my.nethesis.it/api/resellers',
-    'https://dev.my.nethesis.it/api/customers',
-  ], //// ?
-  includeReservedScopes: true,
 }
 
 const app = createApp(App)

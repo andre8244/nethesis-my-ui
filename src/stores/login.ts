@@ -1,194 +1,111 @@
 //  Copyright (C) 2025 Nethesis S.r.l.
 //  SPDX-License-Identifier: GPL-3.0-or-later
 
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import isEmpty from 'lodash/isEmpty'
-import { getJsonFromStorage } from '@nethesis/vue-components'
+import { useLogto } from '@logto/vue'
+import { API_URL, LOGIN_REDIRECT_URI, SIGN_OUT_REDIRECT_URI } from '@/lib/config'
+import axios from 'axios'
 
-// export type LoggedUser = { ////
-//   username: string
-//   name: string
-//   mainOrganization_data: Organization[]
-// }
-
-// export type Organization = { ////
-//   id: string
-//   name: string
-// }
+export type UserInfo = {
+  id: string
+  username: string
+  name: string
+  email: string
+  orgId: string
+  orgName: string
+  orgRole: string
+  orgPermissions: string[]
+  userRoles: string[]
+  userPermissions: string[]
+}
 
 export const useLoginStore = defineStore('login', () => {
-  const username = ref('test') //// set to '' initially
-  const token = ref('')
-  const tokenRefreshedTime = ref(0)
-  // const isRefreshingToken = ref(false) ////
-  const isSessionExpired = ref(false)
+  const { signIn, signOut, isAuthenticated, getAccessToken } = useLogto()
 
-  ////
-  // const router = useRouter()
-  // const route = useRoute()
+  const accessToken = ref<string>('')
+  const jwtToken = ref<string>('')
+  const refreshToken = ref<string>('')
+  const userInfo = ref<UserInfo | undefined>()
 
-  const isLoggedIn = computed(() => {
-    return !isEmpty(username.value)
-  })
+  const fetchTokenAndUserInfo = async () => {
+    try {
+      const token = await getAccessToken()
+      accessToken.value = token || ''
+    } catch (error) {
+      //// toast notification
+      console.error('Cannot fetch access token:', error) ////
+      return
+    }
 
-  const loadUserFromStorage = () => {
-    const loginInfo = getJsonFromStorage('loginInfo')
+    if (accessToken.value) {
+      try {
+        const res = await axios.post(`${API_URL}/auth/exchange`, {
+          access_token: accessToken.value,
+        })
 
-    if (loginInfo) {
-      username.value = loginInfo.username
-      token.value = loginInfo.token
-      tokenRefreshedTime.value = loginInfo.tokenRefreshedTime
+        console.log('[login store] exchange res', res) ////
+
+        jwtToken.value = res.data.token
+        refreshToken.value = res.data.refresh_token
+        const user = res.data.user
+
+        userInfo.value = {
+          id: user.id,
+          username: user.username,
+          name: user.name,
+          email: user.email,
+          orgId: user.organization_id,
+          orgName: user.organization_name,
+          orgRole: user.org_role,
+          orgPermissions: user.org_permissions || [],
+          userRoles: user.user_roles || [],
+          userPermissions: user.user_permissions || [],
+        } as UserInfo
+
+        console.log('[login store] user info', userInfo.value) ////
+      } catch (error) {
+        //// toast notification
+        console.error('Cannot exchange token:', error) ////
+      }
     }
   }
 
-  ////
-  // const login = async (user: string, password: string) => {
-  //   const res = await axios.post(`${getStandaloneApiEndpoint()}/login`, {
-  //     username: user,
-  //     password,
-  //   })
-  //   const jwtToken = res.data.token
-  //   tokenRefreshedTime.value = new Date().getTime()
-  //   return jwtToken
-  // }
+  // watch for authentication changes
+  watch(
+    isAuthenticated,
+    () => {
+      if (isAuthenticated.value) {
+        fetchTokenAndUserInfo()
+      } else {
+        jwtToken.value = ''
+        userInfo.value = undefined
+      }
+    },
+    { immediate: true },
+  )
 
-  // const loginSuccessful = async (user: string, jwtToken: string) => {
-  //   const loginInfo = {
-  //     username: user,
-  //     token: jwtToken,
-  //     tokenRefreshedTime: tokenRefreshedTime.value,
-  //   }
-  //   saveToStorage('standaloneLoginInfo', loginInfo)
+  const userDisplayName = computed(() => userInfo.value?.name || userInfo.value?.username || '')
 
-  //   username.value = user
-  //   token.value = jwtToken
+  const userInitial = computed(() => {
+    const name = userDisplayName.value
+    return name ? name.charAt(0).toUpperCase() : ''
+  })
 
-  //   const themeStore = useThemeStore()
-  //   themeStore.loadTheme()
-  //   isSessionExpired.value = false
-  //   loadAppData(true)
-  // }
-
-  // const logout = async () => {
-  //   await axios.post(
-  //     `${getStandaloneApiEndpoint()}/logout`,
-  //     {},
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${token.value}`,
-  //       },
-  //     },
-  //   )
-  //   deleteFromStorage('standaloneLoginInfo')
-  //   username.value = ''
-  //   token.value = ''
-  //   tokenRefreshedTime.value = 0
-  //   router.push(`${getStandaloneRoutePrefix()}/`)
-  // }
-
-  // const refreshToken = async () => {
-  //   if (isRefreshingToken.value) {
-  //     return
-  //   }
-  //   isRefreshingToken.value = true
-
-  //   try {
-  //     const res = await axios.get(`${getStandaloneApiEndpoint()}/refresh`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token.value}`,
-  //       },
-  //     })
-  //     const jwtToken = res.data.token
-  //     const refreshedTime = new Date().getTime()
-
-  //     if (isStandaloneMode()) {
-  //       const loginInfo = {
-  //         username: username.value,
-  //         token: jwtToken,
-  //         tokenRefreshedTime: refreshedTime,
-  //       }
-  //       saveToStorage('standaloneLoginInfo', loginInfo)
-  //     } else {
-  //       // a controller is managing this unit
-  //       const unit = route.params.unitId as string
-
-  //       const unitLoginInfo = {
-  //         unit,
-  //         token: jwtToken,
-  //         tokenRefreshedTime: refreshedTime,
-  //       }
-
-  //       saveToStorage(`unit-${unit}`, unitLoginInfo)
-  //     }
-  //     token.value = jwtToken
-  //     tokenRefreshedTime.value = refreshedTime
-  //     return jwtToken
-  //   } catch (err) {
-  //     console.error(err)
-  //     return null
-  //   } finally {
-  //     isRefreshingToken.value = false
-  //   }
-  // }
-
-  ////
-  // // load data after login or on page load (if already logged in)
-  // const loadAppData = async (justLoggedIn: boolean) => {
-  //   // need to show setup wizard?
-  //   try {
-  //     await wizardStore.getWizardConfig()
-
-  //     if (!wizardStore.isComplete) {
-  //       // show setup wizard
-  //       router.replace(`${getStandaloneRoutePrefix()}/wizard`)
-  //       return
-  //     }
-  //     // wizard already completed
-
-  //     // load uci pending changes
-  //     const uciChangesStore = useUciPendingChangesStore()
-  //     uciChangesStore.getChanges()
-
-  //     // load unit hostname
-  //     loadHostname()
-
-  //     if (justLoggedIn) {
-  //       // go to dashboard
-  //       router.push(`${getStandaloneRoutePrefix()}/`)
-  //     }
-  //   } catch (err) {
-  //     console.error(err)
-  //   }
-  // }
-
-  const setUsername = (user: string) => {
-    username.value = user
+  const login = () => {
+    signIn(LOGIN_REDIRECT_URI)
   }
 
-  const setToken = (tok: string) => {
-    token.value = tok
-  }
-
-  const setTokenRefreshedTime = (refreshedTime: number) => {
-    tokenRefreshedTime.value = refreshedTime
+  const logout = () => {
+    signOut(SIGN_OUT_REDIRECT_URI)
   }
 
   return {
-    username,
-    token,
-    tokenRefreshedTime,
-    isLoggedIn,
-    isSessionExpired,
-    loadUserFromStorage,
-    // login, ////
-    // logout, ////
-    setUsername,
-    setToken,
-    setTokenRefreshedTime,
-    ////
-    // refreshToken,
-    // loginSuccessful,
-    // loadAppData,
+    isAuthenticated,
+    userDisplayName,
+    userInitial,
+    userInfo,
+    login,
+    logout,
   }
 })

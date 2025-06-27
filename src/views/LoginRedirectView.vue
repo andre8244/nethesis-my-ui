@@ -1,24 +1,17 @@
 <script setup lang="ts">
 import { useHandleSignInCallback } from '@logto/vue'
 import router from '@/router'
-// import { onMounted } from 'vue' ////
+import { NeSpinner } from '@nethesis/vue-components'
 
-const { isLoading } = useHandleSignInCallback(() => {
-  console.log('login success, redirect to home') ////
-
+useHandleSignInCallback(() => {
   // Redirect to home page on successful sign-in
   router.push('/')
 })
-
-// onMounted(() => { ////
-//   console.log('login-redirect-view') ////
-// })
 </script>
 
 <template>
   <div>
-    <div>Login successful ////</div>
-    <p v-if="isLoading">Redirecting... ////</p>
+    <NeSpinner size="12" color="primary" />
   </div>
 </template>
 
