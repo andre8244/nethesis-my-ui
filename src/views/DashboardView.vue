@@ -34,7 +34,7 @@ const loginStore = useLoginStore()
       <NeCard>
         <div class="flex items-start gap-5">
           <NeAvatar size="lg" :initials="loginStore.userInitial" aria-hidden="true" />
-          <template v-if="!loginStore.userDisplayName">
+          <template v-if="loginStore.loadingUserInfo">
             <NeSkeleton :lines="3" class="w-full" />
           </template>
           <template v-else>

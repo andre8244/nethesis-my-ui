@@ -27,47 +27,60 @@ export const useLoginStore = defineStore('login', () => {
   const jwtToken = ref<string>('')
   const refreshToken = ref<string>('')
   const userInfo = ref<UserInfo | undefined>()
+  const loadingUserInfo = ref<boolean>(false)
 
   const fetchTokenAndUserInfo = async () => {
+    loadingUserInfo.value = true
+
     try {
       const token = await getAccessToken()
+
+      if (!token) {
+        //// toast notification
+        console.error('Cannot fetch access token') ////
+        loadingUserInfo.value = false
+        return
+      }
+
       accessToken.value = token || ''
     } catch (error) {
       //// toast notification
       console.error('Cannot fetch access token:', error) ////
+
+      loadingUserInfo.value = false
       return
     }
 
-    if (accessToken.value) {
-      try {
-        const res = await axios.post(`${API_URL}/auth/exchange`, {
-          access_token: accessToken.value,
-        })
+    try {
+      const res = await axios.post(`${API_URL}/auth/exchange`, {
+        access_token: accessToken.value,
+      })
 
-        console.log('[login store] exchange res', res) ////
+      console.log('[login store] exchange res', res) ////
 
-        jwtToken.value = res.data.token
-        refreshToken.value = res.data.refresh_token
-        const user = res.data.user
+      jwtToken.value = res.data.token
+      refreshToken.value = res.data.refresh_token
+      const user = res.data.user
 
-        userInfo.value = {
-          id: user.id,
-          username: user.username,
-          name: user.name,
-          email: user.email,
-          orgId: user.organization_id,
-          orgName: user.organization_name,
-          orgRole: user.org_role,
-          orgPermissions: user.org_permissions || [],
-          userRoles: user.user_roles || [],
-          userPermissions: user.user_permissions || [],
-        } as UserInfo
+      userInfo.value = {
+        id: user.id,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        orgId: user.organization_id,
+        orgName: user.organization_name,
+        orgRole: user.org_role,
+        orgPermissions: user.org_permissions || [],
+        userRoles: user.user_roles || [],
+        userPermissions: user.user_permissions || [],
+      } as UserInfo
 
-        console.log('[login store] user info', userInfo.value) ////
-      } catch (error) {
-        //// toast notification
-        console.error('Cannot exchange token:', error) ////
-      }
+      console.log('[login store] user info', userInfo.value) ////
+    } catch (error) {
+      //// toast notification
+      console.error('Cannot exchange token:', error) ////
+    } finally {
+      loadingUserInfo.value = false
     }
   }
 
@@ -105,6 +118,7 @@ export const useLoginStore = defineStore('login', () => {
     userDisplayName,
     userInitial,
     userInfo,
+    loadingUserInfo,
     login,
     logout,
   }

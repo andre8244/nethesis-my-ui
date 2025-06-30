@@ -4,7 +4,7 @@
 -->
 
 <script setup lang="ts">
-import { NeAvatar, NeDropdown, NeTooltip } from '@nethesis/vue-components'
+import { NeAvatar, NeDropdown, NeSkeleton, NeTooltip } from '@nethesis/vue-components'
 import { computed, ref } from 'vue'
 import { useThemeStore } from '@/stores/theme'
 import { useLoginStore } from '@/stores/login'
@@ -191,15 +191,18 @@ function openNotificationsDrawer() {
               </template>
               <template #menuHeader>
                 <div class="space-y-1 px-4 py-2 text-sm">
-                  <div class="font-medium text-gray-900 dark:text-gray-100">
-                    {{ loginStore.userDisplayName }}
-                  </div>
-                  <div class="text-gray-500 dark:text-gray-400">
-                    {{ loginStore.userInfo?.email }}
-                  </div>
-                  <div class="text-gray-500 dark:text-gray-400">
-                    {{ loginStore.userInfo?.orgRole }}
-                  </div>
+                  <NeSkeleton v-if="loginStore.loadingUserInfo" :lines="2" class="w-full" />
+                  <template v-else>
+                    <div class="font-medium text-gray-900 dark:text-gray-100">
+                      {{ loginStore.userDisplayName }}
+                    </div>
+                    <div class="text-gray-500 dark:text-gray-400">
+                      {{ loginStore.userInfo?.email }}
+                    </div>
+                    <div class="text-gray-500 dark:text-gray-400">
+                      {{ loginStore.userInfo?.orgRole }}
+                    </div>
+                  </template>
                 </div>
                 <hr class="my-1 border-gray-200 dark:border-gray-700" />
               </template>
