@@ -35,7 +35,8 @@
     "help": "Help",
     "switch_to_dark_theme": "Switch to dark theme",
     "switch_to_light_theme": "Switch to light theme",
-    "sign_out": "Sign out"
+    "sign_out": "Sign out",
+    "close_side_drawer": "Close side drawer"
   },
   "login": {
     "welcome_title": "Welcome",
@@ -46,6 +47,16 @@
     "title": "Notifications",
     "no_notification": "No notifications yet",
     "show_details": "Show details"
+  },
+  "error_modal": {
+    "request_failed": "Request failed",
+    "the_following_request_has_failed": "The following request has failed:",
+    "report_issue_description": "If the issue persists and you want to report it, please follow these steps",
+    "copy_command": "Copy command",
+    "copy_the_command": "Copy the command",
+    "report_issue_step_1": "{copyTheCommand} that failed",
+    "report_issue_step_2": "Paste the command on a shell and execute it",
+    "report_issue_step_3": "Report the issue, ensuring to provide both the command and its corresponding output"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -59,10 +70,10 @@
     "training_portal": "Training portal",
     "training_portal_description": "Access training materials and courses"
   },
-  "test": {
-    "title": "Test"
+  "distributors": {
+    "title": "Distributors"
   },
-  "subtest": {
-    "title": "Test subpage"
+  "resellers": {
+    "title": "Resellers"
   }
 }

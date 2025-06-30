@@ -6,6 +6,7 @@ import { defineStore } from 'pinia'
 import { useLogto } from '@logto/vue'
 import { API_URL, LOGIN_REDIRECT_URI, SIGN_OUT_REDIRECT_URI } from '@/lib/config'
 import axios from 'axios'
+import router from '@/router'
 
 export type UserInfo = {
   id: string
@@ -34,6 +35,8 @@ export const useLoginStore = defineStore('login', () => {
 
     try {
       const token = await getAccessToken()
+
+      console.log('access token', token) ////
 
       if (!token) {
         //// toast notification
@@ -90,9 +93,17 @@ export const useLoginStore = defineStore('login', () => {
     () => {
       if (isAuthenticated.value) {
         fetchTokenAndUserInfo()
+
+        // go to dashboard page
+        router.push('/dashboard')
       } else {
         jwtToken.value = ''
+        accessToken.value = ''
+        refreshToken.value = ''
         userInfo.value = undefined
+
+        // go to login page
+        // router.push('/login') ////
       }
     },
     { immediate: true },
@@ -115,6 +126,7 @@ export const useLoginStore = defineStore('login', () => {
 
   return {
     isAuthenticated,
+    jwtToken,
     userDisplayName,
     userInitial,
     userInfo,

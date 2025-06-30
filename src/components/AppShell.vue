@@ -18,6 +18,7 @@ import LogoDark from '@/assets/logo_dark.svg'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import TopBar from './TopBar.vue'
+import NotificationDrawer from './NotificationDrawer.vue'
 
 const themeStore = useThemeStore()
 
@@ -137,7 +138,6 @@ const logoFile = computed(() => {
         </div>
       </main>
     </div>
-    <!-- <NotificationDrawer :close-on-click-outside="true" /> ////  -->
-    <!-- <ToastNotificationsArea /> ////  -->
+    <NotificationDrawer :close-on-click-outside="true" />
   </div>
 </template>

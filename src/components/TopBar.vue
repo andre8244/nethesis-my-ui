@@ -18,12 +18,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useI18n } from 'vue-i18n'
+import { useNotificationsStore } from '@/stores/notifications'
 
 const emit = defineEmits(['openSidebar'])
 
 const { t } = useI18n()
 const themeStore = useThemeStore()
 const loginStore = useLoginStore()
+const notificationsStore = useNotificationsStore()
 
 const topBarButtonsColorClasses =
   'text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-50 transition-colors duration-300'
@@ -64,7 +66,7 @@ const accountMenuOptions = computed(() => {
 // )
 
 function openNotificationsDrawer() {
-  // notificationsStore.setNotificationDrawerOpen(true) ////
+  notificationsStore.setNotificationDrawerOpen(true)
 }
 </script>
 

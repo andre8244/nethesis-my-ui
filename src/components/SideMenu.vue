@@ -17,8 +17,15 @@ import {
   faChevronUp,
   faChevronDown,
   type IconDefinition,
+  faGlobe as fasGlobe,
+  faBuilding as fasBuilding,
 } from '@fortawesome/free-solid-svg-icons'
-import { faHouse as falHouse, faGear as falGear } from '@nethesis/nethesis-light-svg-icons'
+import {
+  faHouse as falHouse,
+  faGear as falGear,
+  faGlobe as falGlobe,
+  faBuilding as falBuilding,
+} from '@nethesis/nethesis-light-svg-icons'
 
 type MenuItem = {
   name: string
@@ -34,6 +41,7 @@ const loginStore = useLoginStore()
 const menuItemsExpandedLoaded = ref(false)
 
 const menuExpanded: Ref<Record<string, boolean>> = ref({
+  distributors: false,
   test: false, ////
   // system: false, ////
   // network: false,
@@ -46,7 +54,18 @@ const menuExpanded: Ref<Record<string, boolean>> = ref({
 
 const navigation: Ref<MenuItem[]> = ref([
   { name: 'dashboard.title', to: 'dashboard', solidIcon: fasHouse, lightIcon: falHouse },
-  //// remove test and substest i18n strings
+  {
+    name: 'distributors.title',
+    to: 'distributors',
+    solidIcon: fasGlobe,
+    lightIcon: falGlobe,
+  },
+  {
+    name: 'resellers.title',
+    to: 'resellers',
+    solidIcon: fasBuilding,
+    lightIcon: falBuilding,
+  },
   {
     name: 'test.title',
     to: 'test',
@@ -57,57 +76,8 @@ const navigation: Ref<MenuItem[]> = ref([
         name: 'subtest.title',
         to: 'test/subtest',
       },
-      // { ////
-      //   name: 'netify_informatics.title',
-      //   to: 'monitoring/netify-informatics',
-      // },
-      // {
-      //   name: 'ping_latency_monitor.title',
-      //   to: 'monitoring/ping-latency-monitor',
-      // },
     ],
   },
-  // { ////
-  //   name: 'system.title',
-  //   icon: 'server',
-  //   to: 'system',
-  //   children: [
-  //     { name: 'subscription.title', to: 'system/subscription' },
-  //     {
-  //       name: 'system_settings.title',
-  //       to: 'system/systemSettings',
-  //     },
-  //     { name: 'ssh.title', to: 'system/ssh' },
-  //     {
-  //       name: 'backup_and_restore.title',
-  //       to: 'system/backup-and-restore',
-  //     },
-  //     {
-  //       name: 'reboot_and_shutdown.title',
-  //       to: 'system/reboot-and-shutdown',
-  //     },
-  //     {
-  //       name: 'update.title',
-  //       to: 'system/update',
-  //     },
-  //     {
-  //       name: 'storage.title',
-  //       to: 'system/storage',
-  //     },
-  //     {
-  //       name: 'factory_reset.title',
-  //       to: 'system/factory_reset',
-  //     },
-  //     {
-  //       name: 'certificates.title',
-  //       to: 'system/certificates',
-  //     },
-  //     {
-  //       name: 'controller.title',
-  //       to: 'system/controller',
-  //     },
-  //   ],
-  // },
 ])
 
 watch(
@@ -127,15 +97,20 @@ function isCurrentRoute(itemPath: string) {
 function toggleExpand(menuItem: MenuItem) {
   const newValue = !menuExpanded.value[menuItem.to]
   menuExpanded.value[menuItem.to] = newValue
-  savePreference(`${menuItem.to}MenuExpanded`, newValue, loginStore.username)
+
+  if (loginStore.userInfo?.username) {
+    savePreference(`${menuItem.to}MenuExpanded`, newValue, loginStore.userInfo.username)
+  }
 }
 
 function loadMenuItemsExpanded() {
   for (const menuName of Object.keys(menuExpanded.value)) {
-    const isMenuExpanded = getPreference(`${menuName}MenuExpanded`, loginStore.username)
+    if (loginStore.userInfo?.username) {
+      const isMenuExpanded = getPreference(`${menuName}MenuExpanded`, loginStore.userInfo.username)
 
-    if (isMenuExpanded || isCurrentRoute(menuName)) {
-      menuExpanded.value[menuName] = true
+      if (isMenuExpanded || isCurrentRoute(menuName)) {
+        menuExpanded.value[menuName] = true
+      }
     }
   }
   menuItemsExpandedLoaded.value = true

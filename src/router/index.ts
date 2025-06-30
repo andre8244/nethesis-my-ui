@@ -5,6 +5,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardView.vue'
 import LoginRedirectView from '../views/LoginRedirectView.vue'
 import LoginView from '../views/LoginView.vue'
+import DistributorsView from '../views/DistributorsView.vue'
+import ResellersView from '@/views/ResellersView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +30,16 @@ const router = createRouter({
       path: '/login-redirect',
       name: 'loginRedirect',
       component: LoginRedirectView,
+    },
+    {
+      path: '/distributors',
+      name: 'distributors',
+      component: DistributorsView,
+    },
+    {
+      path: '/resellers',
+      name: 'resellers',
+      component: ResellersView,
     },
     {
       //// remove
