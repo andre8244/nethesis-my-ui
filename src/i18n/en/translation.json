@@ -24,7 +24,10 @@
     "try_changing_search_filters": "Try changing your search filters",
     "go_to_page": "Go to {page}",
     "open_page": "Open {page}",
-    "no_data_available": "No data available"
+    "no_data_available": "No data available",
+    "actions": "Actions",
+    "object_created_successfully": "{name} created successfully",
+    "object_saved_successfully": "{name} saved successfully"
   },
   "shell": {
     "open_sidebar": "Open sidebar",
@@ -71,9 +74,35 @@
     "training_portal_description": "Access training materials and courses"
   },
   "distributors": {
-    "title": "Distributors"
+    "title": "Distributors",
+    "page_description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "cannot_retrieve_distributors": "Cannot retrieve distributors",
+    "name": "Name",
+    "description": "Description",
+    "region": "Region",
+    "contact_person": "Contact person",
+    "no_distributor_found": "No distributor found",
+    "filter_distributors": "Filter distributors",
+    "create_distributor": "Create distributor",
+    "edit_distributor": "Edit distributor",
+    "save_distributor": "Save distributor",
+    "name_required": "Name is required",
+    "distributor_created": "Distributor created",
+    "distributor_saved": "Distributor saved",
+    "distributor_deleted": "Distributor deleted",
+    "cannot_create_distributor": "Cannot create distributor",
+    "cannot_save_distributor": "Cannot save distributor"
   },
   "resellers": {
-    "title": "Resellers"
+    "title": "Resellers",
+    "page_description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  },
+  "ne_table": {
+    "no_items": "No items",
+    "go_to_previous_page": "Go to previous page",
+    "go_to_next_page": "Go to next page",
+    "of": "of",
+    "pagination": "Table pagination",
+    "show": "Show"
   }
 }

@@ -13,18 +13,16 @@ import { useRoute } from 'vue-router'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
   faHouse as fasHouse,
-  faGear as fasGear,
   faChevronUp,
   faChevronDown,
   type IconDefinition,
   faGlobe as fasGlobe,
-  faBuilding as fasBuilding,
+  // faBuilding as fasBuilding, ////
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faHouse as falHouse,
-  faGear as falGear,
   faGlobe as falGlobe,
-  faBuilding as falBuilding,
+  // faBuilding as falBuilding, ////
 } from '@nethesis/nethesis-light-svg-icons'
 
 type MenuItem = {
@@ -42,14 +40,7 @@ const menuItemsExpandedLoaded = ref(false)
 
 const menuExpanded: Ref<Record<string, boolean>> = ref({
   distributors: false,
-  test: false, ////
-  // system: false, ////
-  // network: false,
-  // 'users-objects': false,
-  // firewall: false,
-  // security: false,
-  // vpn: false,
-  // monitoring: false,
+  resellers: false,
 })
 
 const navigation: Ref<MenuItem[]> = ref([
@@ -60,24 +51,12 @@ const navigation: Ref<MenuItem[]> = ref([
     solidIcon: fasGlobe,
     lightIcon: falGlobe,
   },
-  {
-    name: 'resellers.title',
-    to: 'resellers',
-    solidIcon: fasBuilding,
-    lightIcon: falBuilding,
-  },
-  {
-    name: 'test.title',
-    to: 'test',
-    solidIcon: fasGear,
-    lightIcon: falGear,
-    children: [
-      {
-        name: 'subtest.title',
-        to: 'test/subtest',
-      },
-    ],
-  },
+  // { ////
+  //   name: 'resellers.title',
+  //   to: 'resellers',
+  //   solidIcon: fasBuilding,
+  //   lightIcon: falBuilding,
+  // },
 ])
 
 watch(

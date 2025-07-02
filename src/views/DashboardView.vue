@@ -53,10 +53,11 @@ const loginStore = useLoginStore()
           </template>
         </div>
       </NeCard>
+      <!-- //// improve spacing grid -->
       <!-- spacing -->
       <div class="hidden sm:block"></div>
-      <div class="hidden xl:block"></div>
-      <div class="hidden xl:block"></div>
+      <div class="hidden 2xl:block"></div>
+      <div class="hidden 2xl:block"></div>
       <!-- warehouse -->
       <NeCard>
         <div class="flex h-full flex-col justify-between gap-4">

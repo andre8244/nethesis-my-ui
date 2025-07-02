@@ -14,6 +14,7 @@ import { useI18n } from 'vue-i18n'
 import ToastNotificationsArea from '@/components/ToastNotificationsArea.vue'
 import axios from 'axios'
 import { useNotificationsStore } from './stores/notifications'
+import { PiniaColadaDevtools } from '@pinia/colada-devtools'
 
 const themeStore = useThemeStore()
 const route = useRoute()
@@ -75,6 +76,7 @@ const configureAxios = () => {
     <RouterView v-else />
     <ToastNotificationsArea />
   </div>
+  <PiniaColadaDevtools />
 </template>
 
 <style scoped></style>

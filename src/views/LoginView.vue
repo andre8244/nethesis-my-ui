@@ -8,7 +8,7 @@ import LoginLogo from '@/assets/login_logo.svg'
 import Loader from '@/assets/loader.svg'
 import { onMounted } from 'vue'
 import { useLoginStore } from '@/stores/login'
-import router from '@/router'
+import router from '@/router' ////
 
 const loginStore = useLoginStore()
 
