@@ -92,11 +92,15 @@ export const useLoginStore = defineStore('login', () => {
     isAuthenticated,
     () => {
       if (isAuthenticated.value) {
+        console.log('user is authenticated') ////
+
         fetchTokenAndUserInfo()
 
         // go to dashboard page
-        router.push('/dashboard')
+        // router.push('/dashboard') ////
       } else {
+        console.log('user is NOT authenticated') ////
+
         jwtToken.value = ''
         accessToken.value = ''
         refreshToken.value = ''

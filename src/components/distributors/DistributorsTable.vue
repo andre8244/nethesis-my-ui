@@ -42,7 +42,7 @@ const { t } = useI18n()
 const loginStore = useLoginStore()
 const { state: distributors, asyncStatus: distributorsAsyncStatus } = useQuery({
   key: ['distributors'], //// use key factory?
-  enabled: !!loginStore.jwtToken,
+  enabled: () => !!loginStore.jwtToken,
   query: getDistributors,
 })
 
