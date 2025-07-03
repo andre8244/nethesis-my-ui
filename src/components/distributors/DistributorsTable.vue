@@ -6,7 +6,14 @@
 <script setup lang="ts">
 import { getDistributors, type Distributor } from '@/lib/distributors'
 import { useLoginStore } from '@/stores/login'
-import { faCircleInfo, faPenToSquare, faTable, faTrash } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCircleInfo,
+  faCirclePlus,
+  faGlobe,
+  faPenToSquare,
+  faTable,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
   NeTable,
@@ -172,12 +179,25 @@ function getKebabMenuItems(distributor: Distributor) {
       <NeTableBody>
         <!-- empty state -->
         <NeTableRow v-if="!distributors.data?.length">
-          <NeTableCell colspan="4">
+          <NeTableCell colspan="5">
             <NeEmptyState
-              :title="$t('ne_table.no_items')"
-              :icon="faTable"
+              :title="$t('distributors.no_distributor')"
+              :icon="faGlobe"
               class="bg-white dark:bg-gray-950"
-            />
+            >
+              <!-- create distributor -->
+              <NeButton
+                kind="secondary"
+                size="lg"
+                class="shrink-0"
+                @click="showCreateDistributorDrawer()"
+              >
+                <template #prefix>
+                  <FontAwesomeIcon :icon="faCirclePlus" aria-hidden="true" />
+                </template>
+                {{ $t('distributors.create_distributor') }}
+              </NeButton>
+            </NeEmptyState>
           </NeTableCell>
         </NeTableRow>
         <!-- no distributor matching filter -->

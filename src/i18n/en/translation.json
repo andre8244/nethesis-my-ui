@@ -96,7 +96,8 @@
     "cannot_save_distributor": "Cannot save distributor",
     "cannot_delete_distributor": "Cannot delete distributor",
     "delete_distributor": "Delete distributor",
-    "delete_distributor_confirmation": "Are you sure you want to delete distributor {name}? This action cannot be undone."
+    "delete_distributor_confirmation": "Are you sure you want to delete distributor {name}? This action cannot be undone.",
+    "no_distributor": "No distributor"
   },
   "resellers": {
     "title": "Resellers",
