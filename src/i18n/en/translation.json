@@ -28,6 +28,7 @@
     "actions": "Actions",
     "object_created_successfully": "{name} created successfully",
     "object_saved_successfully": "{name} saved successfully",
+    "object_deleted_successfully": "{name} deleted successfully",
     "updating": "Updating..."
   },
   "shell": {
@@ -92,7 +93,10 @@
     "distributor_saved": "Distributor saved",
     "distributor_deleted": "Distributor deleted",
     "cannot_create_distributor": "Cannot create distributor",
-    "cannot_save_distributor": "Cannot save distributor"
+    "cannot_save_distributor": "Cannot save distributor",
+    "cannot_delete_distributor": "Cannot delete distributor",
+    "delete_distributor": "Delete distributor",
+    "delete_distributor_confirmation": "Are you sure you want to delete distributor {name}? This action cannot be undone."
   },
   "resellers": {
     "title": "Resellers",

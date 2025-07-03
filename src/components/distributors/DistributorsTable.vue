@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import { getDistributors, type Distributor } from '@/lib/distributors'
 import { useLoginStore } from '@/stores/login'
-import { faCircleInfo, faPenToSquare, faTable } from '@fortawesome/free-solid-svg-icons'
+import { faCircleInfo, faPenToSquare, faTable, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
   NeTable,
@@ -22,21 +22,23 @@ import {
   NeInlineNotification,
   NeTextInput,
   NeSpinner,
+  NeDropdown,
 } from '@nethesis/vue-components'
 import { useQuery } from '@pinia/colada'
 import { computed, ref, watch } from 'vue'
 import CreateOrEditDistributorDrawer from './CreateOrEditDistributorDrawer.vue'
+import { useI18n } from 'vue-i18n'
+import DeleteDistributorModal from './DeleteDistributorModal.vue'
 
 //// review
 
-////
 const { isShownCreateDistributorDrawer = false } = defineProps<{
   isShownCreateDistributorDrawer: boolean
 }>()
 
 const emit = defineEmits(['close-drawer']) ////
 
-// const { t } = useI18n() ////
+const { t } = useI18n()
 const loginStore = useLoginStore()
 const { state: distributors, asyncStatus: distributorsAsyncStatus } = useQuery({
   key: ['distributors'], //// use key factory?
@@ -47,6 +49,7 @@ const { state: distributors, asyncStatus: distributorsAsyncStatus } = useQuery({
 const currentDistributor = ref<Distributor | undefined>()
 const textFilter = ref('')
 const isShownCreateOrEditDistributorDrawer = ref(false)
+const isShownDeleteDistributorDrawer = ref(false)
 const pageSize = ref(10)
 
 const filteredDistributors = computed(() => {
@@ -87,9 +90,27 @@ function showEditDistributorDrawer(distributor: Distributor) {
   isShownCreateOrEditDistributorDrawer.value = true
 }
 
+function showDeleteDistributorDrawer(distributor: Distributor) {
+  currentDistributor.value = distributor
+  isShownDeleteDistributorDrawer.value = true
+}
+
 function onCloseDrawer() {
   isShownCreateOrEditDistributorDrawer.value = false
   emit('close-drawer')
+}
+
+function getKebabMenuItems(distributor: Distributor) {
+  return [
+    {
+      id: 'deleteDistributor',
+      label: t('common.delete'),
+      icon: faTrash,
+      danger: true,
+      action: () => showDeleteDistributorDrawer(distributor),
+      disabled: false,
+    },
+  ]
 }
 </script>
 
@@ -130,14 +151,6 @@ function onCloseDrawer() {
           </div>
         </div>
       </div>
-      <!-- create distributor //// -->
-      <!-- <NeButton kind="secondary" size="lg" class="shrink-0" @click="showCreateDistributorDrawer">
-        <template #prefix>
-          <FontAwesomeIcon :icon="faCirclePlus" aria-hidden="true" />
-        </template>
-        {{ $t('distributors.create_distributor') }}
-      </NeButton> -->
-      <!-- table -->
     </div>
     <!-- //// check breakpoint, skeleton-columns -->
     <NeTable
@@ -196,7 +209,7 @@ function onCloseDrawer() {
             {{ item.customData?.contactPerson || '-' }}
           </NeTableCell>
           <NeTableCell :data-label="$t('common.actions')">
-            <div class="-ml-2.5 flex xl:ml-0 xl:justify-end">
+            <div class="-ml-2.5 flex gap-2 xl:ml-0 xl:justify-end">
               <NeButton kind="tertiary" @click="showEditDistributorDrawer(item)">
                 <template #prefix>
                   <!-- //// "Details" instead of "Edit" to open the drawer? -->
@@ -204,6 +217,8 @@ function onCloseDrawer() {
                 </template>
                 {{ $t('common.edit') }}
               </NeButton>
+              <!-- kebab menu -->
+              <NeDropdown :items="getKebabMenuItems(item)" :align-to-right="true" />
             </div>
           </NeTableCell>
         </NeTableRow>
@@ -236,6 +251,12 @@ function onCloseDrawer() {
       :is-shown="isShownCreateOrEditDistributorDrawer"
       :current-distributor="currentDistributor"
       @close="onCloseDrawer"
+    />
+    <!-- delete distributor modal -->
+    <DeleteDistributorModal
+      :visible="isShownDeleteDistributorDrawer"
+      :distributor="currentDistributor"
+      @close="isShownDeleteDistributorDrawer = false"
     />
   </div>
 </template>

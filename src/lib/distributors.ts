@@ -103,3 +103,13 @@ export const putDistributor = (distributor: Distributor) => {
     headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
   })
 }
+
+export const deleteDistributor = (distributor: Distributor) => {
+  console.log('deleteDistributor', distributor) ////
+
+  const loginStore = useLoginStore()
+
+  return axios.delete(`${API_URL}/distributors/${distributor.id}`, {
+    headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
+  })
+}

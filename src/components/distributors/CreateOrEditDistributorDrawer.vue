@@ -40,8 +40,6 @@ const notificationsStore = useNotificationsStore()
 
 const {
   mutate: createDistributorMutate,
-  // status: createDistributorStatus, ////
-  // asyncStatus: createDistributorAsyncStatus, ////
   isLoading: createDistributorLoading,
   reset: createDistributorReset,
   error: createDistributorError,
