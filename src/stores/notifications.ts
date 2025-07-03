@@ -41,12 +41,13 @@ export const useNotificationsStore = defineStore('notifications', () => {
   const getErrorDescription = (axiosError: AxiosError) => {
     // return last segment of api url
     if (axiosError.config?.url) {
+      const method = axiosError.config.method?.toUpperCase()
       const chunks = axiosError.config.url.split('/api/')
 
       if (chunks.length == 2) {
-        return axiosError.config.url.split('/api/')[1]
+        return method + ' ' + axiosError.config.url.split('/api/')[1]
       } else {
-        return axiosError.config.url
+        return method + ' ' + axiosError.config.url
       }
     } else {
       return ''

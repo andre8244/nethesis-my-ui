@@ -10,8 +10,6 @@ import { computed, ref, toRaw, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useNotificationsStore } from '@/stores/notifications'
 
-//// review
-
 const { t } = useI18n()
 const notificationsStore = useNotificationsStore()
 const justCopied = ref(false)
