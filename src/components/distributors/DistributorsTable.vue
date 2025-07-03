@@ -6,12 +6,7 @@
 <script setup lang="ts">
 import { getDistributors, type Distributor } from '@/lib/distributors'
 import { useLoginStore } from '@/stores/login'
-import {
-  faCircleInfo,
-  faCirclePlus,
-  faPenToSquare,
-  faTable,
-} from '@fortawesome/free-solid-svg-icons'
+import { faCircleInfo, faPenToSquare, faTable } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
   NeTable,
@@ -26,24 +21,24 @@ import {
   NeEmptyState,
   NeInlineNotification,
   NeTextInput,
+  NeSpinner,
 } from '@nethesis/vue-components'
 import { useQuery } from '@pinia/colada'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import CreateOrEditDistributorDrawer from './CreateOrEditDistributorDrawer.vue'
 
 //// review
 
 ////
-// const { textFilter = '' } = defineProps<{
-//   textFilter: string
-//   //// other filters
-// }>()
+const { isShownCreateDistributorDrawer = false } = defineProps<{
+  isShownCreateDistributorDrawer: boolean
+}>()
 
-// const emit = defineEmits(['editDistributor', 'clearFilters']) ////
+const emit = defineEmits(['close-drawer']) ////
 
 // const { t } = useI18n() ////
 const loginStore = useLoginStore()
-const { state: distributors, asyncStatus } = useQuery({
+const { state: distributors, asyncStatus: distributorsAsyncStatus } = useQuery({
   key: ['distributors'], //// use key factory?
   enabled: !!loginStore.jwtToken,
   query: getDistributors,
@@ -68,6 +63,16 @@ const { currentPage, paginatedItems } = useItemPagination(() => filteredDistribu
   itemsPerPage: pageSize,
 })
 
+watch(
+  () => isShownCreateDistributorDrawer,
+  () => {
+    if (isShownCreateDistributorDrawer) {
+      showCreateDistributorDrawer()
+    }
+  },
+  { immediate: true },
+)
+
 function clearFilters() {
   textFilter.value = ''
 }
@@ -81,6 +86,11 @@ function showEditDistributorDrawer(distributor: Distributor) {
   currentDistributor.value = distributor
   isShownCreateOrEditDistributorDrawer.value = true
 }
+
+function onCloseDrawer() {
+  isShownCreateOrEditDistributorDrawer.value = false
+  emit('close-drawer')
+}
 </script>
 
 <template>
@@ -93,27 +103,40 @@ function showEditDistributorDrawer(distributor: Distributor) {
       :description="distributors.error.message"
       class="mb-6"
     />
-    <!-- filters -->
-    <div class="mb-6 flex items-center justify-between gap-4">
-      <div class="flex gap-4">
-        <!-- text filter -->
-        <NeTextInput
-          v-model.trim="textFilter"
-          :placeholder="$t('distributors.filter_distributors')"
-          class="max-w-48 sm:max-w-sm"
-        />
-        <!-- clear filters -->
-        <NeButton kind="tertiary" @click="clearFilters">
-          {{ $t('common.clear_filters') }}
-        </NeButton>
+    <!-- table toolbar -->
+    <div class="mb-6 flex items-center gap-4">
+      <div class="flex w-full items-center justify-between gap-4">
+        <!-- filters -->
+        <div class="flex gap-4">
+          <!-- text filter -->
+          <NeTextInput
+            v-model.trim="textFilter"
+            :placeholder="$t('distributors.filter_distributors')"
+            class="max-w-48 sm:max-w-sm"
+          />
+          <!-- clear filters -->
+          <NeButton kind="tertiary" @click="clearFilters">
+            {{ $t('common.clear_filters') }}
+          </NeButton>
+        </div>
+        <!-- update indicator -->
+        <div
+          v-if="distributorsAsyncStatus === 'loading' && distributors.status !== 'pending'"
+          class="flex items-center gap-2"
+        >
+          <NeSpinner color="white" />
+          <div class="text-gray-500 dark:text-gray-400">
+            {{ $t('common.updating') }}
+          </div>
+        </div>
       </div>
-      <!-- add distributor -->
-      <NeButton kind="secondary" size="lg" class="shrink-0" @click="showCreateDistributorDrawer">
+      <!-- create distributor //// -->
+      <!-- <NeButton kind="secondary" size="lg" class="shrink-0" @click="showCreateDistributorDrawer">
         <template #prefix>
           <FontAwesomeIcon :icon="faCirclePlus" aria-hidden="true" />
         </template>
         {{ $t('distributors.create_distributor') }}
-      </NeButton>
+      </NeButton> -->
       <!-- table -->
     </div>
     <!-- //// check breakpoint, skeleton-columns -->
@@ -212,7 +235,7 @@ function showEditDistributorDrawer(distributor: Distributor) {
     <CreateOrEditDistributorDrawer
       :is-shown="isShownCreateOrEditDistributorDrawer"
       :current-distributor="currentDistributor"
-      @close="isShownCreateOrEditDistributorDrawer = false"
+      @close="onCloseDrawer"
     />
   </div>
 </template>

@@ -27,7 +27,8 @@
     "no_data_available": "No data available",
     "actions": "Actions",
     "object_created_successfully": "{name} created successfully",
-    "object_saved_successfully": "{name} saved successfully"
+    "object_saved_successfully": "{name} saved successfully",
+    "updating": "Updating..."
   },
   "shell": {
     "open_sidebar": "Open sidebar",
