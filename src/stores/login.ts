@@ -6,7 +6,6 @@ import { defineStore } from 'pinia'
 import { useLogto } from '@logto/vue'
 import { API_URL, LOGIN_REDIRECT_URI, SIGN_OUT_REDIRECT_URI } from '@/lib/config'
 import axios from 'axios'
-import router from '@/router'
 
 export type UserInfo = {
   id: string
@@ -61,9 +60,9 @@ export const useLoginStore = defineStore('login', () => {
 
       console.log('[login store] exchange res', res) ////
 
-      jwtToken.value = res.data.token
-      refreshToken.value = res.data.refresh_token
-      const user = res.data.user
+      jwtToken.value = res.data.data.token
+      refreshToken.value = res.data.data.refresh_token
+      const user = res.data.data.user
 
       userInfo.value = {
         id: user.id,

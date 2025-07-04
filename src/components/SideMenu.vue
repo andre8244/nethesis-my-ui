@@ -7,7 +7,7 @@
 import { useLoginStore } from '@/stores/login'
 import { getPreference, savePreference } from '@nethesis/vue-components'
 import isEmpty from 'lodash/isEmpty'
-import { ref, watch, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -43,21 +43,29 @@ const menuExpanded: Ref<Record<string, boolean>> = ref({
   resellers: false,
 })
 
-const navigation: Ref<MenuItem[]> = ref([
-  { name: 'dashboard.title', to: 'dashboard', solidIcon: fasHouse, lightIcon: falHouse },
-  {
-    name: 'distributors.title',
-    to: 'distributors',
-    solidIcon: fasGlobe,
-    lightIcon: falGlobe,
-  },
+const navigation = computed(() => {
+  const menuItems: MenuItem[] = [
+    { name: 'dashboard.title', to: 'dashboard', solidIcon: fasHouse, lightIcon: falHouse },
+  ]
+
+  if (loginStore.userInfo?.orgName === 'Owner') {
+    menuItems.push({
+      name: 'distributors.title',
+      to: 'distributors',
+      solidIcon: fasGlobe,
+      lightIcon: falGlobe,
+    })
+  }
+
   // { ////
   //   name: 'resellers.title',
   //   to: 'resellers',
   //   solidIcon: fasBuilding,
   //   lightIcon: falBuilding,
   // },
-])
+
+  return menuItems
+})
 
 watch(
   () => route.path,
