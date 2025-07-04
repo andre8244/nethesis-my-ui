@@ -4,14 +4,13 @@
 -->
 
 <script setup lang="ts">
-import { getDistributors, type Distributor } from '@/lib/distributors'
+import { getDistributors, searchStringInDistributor, type Distributor } from '@/lib/distributors'
 import { useLoginStore } from '@/stores/login'
 import {
   faCircleInfo,
   faCirclePlus,
   faGlobe,
   faPenToSquare,
-  faTable,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -64,9 +63,13 @@ const filteredDistributors = computed(() => {
     return []
   }
 
-  return distributors.value.data.filter(() => {
-    return true //// fix
-  })
+  if (!textFilter.value.trim()) {
+    return distributors.value.data
+  } else {
+    return distributors.value.data.filter((distributor) =>
+      searchStringInDistributor(textFilter.value, distributor),
+    )
+  }
 })
 
 const { currentPage, paginatedItems } = useItemPagination(() => filteredDistributors.value, {
@@ -139,6 +142,7 @@ function getKebabMenuItems(distributor: Distributor) {
           <!-- text filter -->
           <NeTextInput
             v-model.trim="textFilter"
+            is-search
             :placeholder="$t('distributors.filter_distributors')"
             class="max-w-48 sm:max-w-sm"
           />

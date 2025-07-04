@@ -113,3 +113,48 @@ export const deleteDistributor = (distributor: Distributor) => {
     headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
   })
 }
+
+export const searchStringInDistributor = (
+  searchString: string,
+
+  distributor: Distributor,
+): boolean => {
+  const regex = /[^a-zA-Z0-9-]/g
+  searchString = searchString.replace(regex, '')
+  let found = false
+
+  // search in string attributes
+  found = ['name', 'description'].some((attrName) => {
+    const attrValue = distributor[attrName as keyof Distributor] as string
+    return new RegExp(searchString, 'i').test(attrValue?.replace(regex, ''))
+  })
+
+  if (found) {
+    return true
+  }
+
+  //// review customData attributes
+
+  // search in customData
+  found = [
+    'address',
+    'city',
+    'codiceFiscale',
+    'contactPerson',
+    'email',
+    'partitaIva',
+    'phone',
+    'region',
+  ].some((attrName) => {
+    const attrValue = distributor.customData?.[
+      attrName as keyof NonNullable<Distributor['customData']>
+    ] as string
+    return new RegExp(searchString, 'i').test(attrValue?.replace(regex, ''))
+  })
+
+  if (found) {
+    return true
+  } else {
+    return false
+  }
+}

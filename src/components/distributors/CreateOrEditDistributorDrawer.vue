@@ -302,6 +302,7 @@ async function saveDistributor() {
           {{ $t('common.cancel') }}
         </NeButton>
         <NeButton
+          type="submit"
           kind="primary"
           size="lg"
           :disabled="saving"
