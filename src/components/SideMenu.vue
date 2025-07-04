@@ -17,12 +17,14 @@ import {
   faChevronDown,
   type IconDefinition,
   faGlobe as fasGlobe,
-  // faBuilding as fasBuilding, ////
+  faBuilding as fasBuilding,
+  faUserGroup as fasUserGroup,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faHouse as falHouse,
   faGlobe as falGlobe,
-  // faBuilding as falBuilding, ////
+  faBuilding as falBuilding,
+  faUserGroup as falUserGroup,
 } from '@nethesis/nethesis-light-svg-icons'
 
 type MenuItem = {
@@ -48,22 +50,34 @@ const navigation = computed(() => {
     { name: 'dashboard.title', to: 'dashboard', solidIcon: fasHouse, lightIcon: falHouse },
   ]
 
-  if (loginStore.userInfo?.orgName === 'Owner') {
-    menuItems.push({
-      name: 'distributors.title',
-      to: 'distributors',
-      solidIcon: fasGlobe,
-      lightIcon: falGlobe,
-    })
+  if (loginStore.userInfo?.orgRole) {
+    if (loginStore.userInfo.orgRole === 'Owner') {
+      menuItems.push({
+        name: 'distributors.title',
+        to: 'distributors',
+        solidIcon: fasGlobe,
+        lightIcon: falGlobe,
+      })
+    }
+
+    if (['Owner', 'Distributor'].includes(loginStore.userInfo.orgRole)) {
+      menuItems.push({
+        name: 'resellers.title',
+        to: 'resellers',
+        solidIcon: fasBuilding,
+        lightIcon: falBuilding,
+      })
+    }
+
+    if (['Owner', 'Distributor', 'Reseller'].includes(loginStore.userInfo.orgRole)) {
+      menuItems.push({
+        name: 'customers.title',
+        to: 'customers',
+        solidIcon: fasUserGroup,
+        lightIcon: falUserGroup,
+      })
+    }
   }
-
-  // { ////
-  //   name: 'resellers.title',
-  //   to: 'resellers',
-  //   solidIcon: fasBuilding,
-  //   lightIcon: falBuilding,
-  // },
-
   return menuItems
 })
 

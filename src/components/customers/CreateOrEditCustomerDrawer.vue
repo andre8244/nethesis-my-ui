@@ -12,12 +12,7 @@ import {
   NeInlineNotification,
 } from '@nethesis/vue-components'
 import { computed, ref, watch } from 'vue'
-import {
-  DistributorSchema,
-  postDistributor,
-  putDistributor,
-  type Distributor,
-} from '@/lib/distributors'
+import { CustomerSchema, postCustomer, putCustomer, type Customer } from '@/lib/customers'
 import * as v from 'valibot'
 import { useMutation, useQueryCache } from '@pinia/colada'
 import { useNotificationsStore } from '@/stores/notifications'
@@ -27,9 +22,9 @@ import { useI18n } from 'vue-i18n'
 
 //// search "host" occurrences
 
-const { isShown = false, currentDistributor = undefined } = defineProps<{
+const { isShown = false, currentCustomer = undefined } = defineProps<{
   isShown: boolean
-  currentDistributor: Distributor | undefined
+  currentCustomer: Customer | undefined
 }>()
 
 const emit = defineEmits(['close'])
@@ -39,20 +34,20 @@ const queryCache = useQueryCache()
 const notificationsStore = useNotificationsStore()
 
 const {
-  mutate: createDistributorMutate,
-  isLoading: createDistributorLoading,
-  reset: createDistributorReset,
-  error: createDistributorError,
+  mutate: createCustomerMutate,
+  isLoading: createCustomerLoading,
+  reset: createCustomerReset,
+  error: createCustomerError,
 } = useMutation({
-  mutation: (newDistributor: Distributor) => {
-    return postDistributor(newDistributor)
+  mutation: (newCustomer: Customer) => {
+    return postCustomer(newCustomer)
   },
   onSuccess(data, vars, context) {
     // show success notification after drawer closes
     setTimeout(() => {
       notificationsStore.createNotification({
         kind: 'success',
-        title: t('distributors.distributor_created'),
+        title: t('customers.customer_created'),
         description: t('common.object_created_successfully', {
           name: vars.name,
         }),
@@ -61,36 +56,36 @@ const {
 
     closeDrawer()
 
-    console.log('distributor created', data) ////
+    console.log('customer created', data) ////
     console.log('   vars', vars) ////
     console.log('   context', context) ////
   },
   onError: (error, variables) => {
     ////
-    console.error('Error creating distributor:', error)
+    console.error('Error creating customer:', error)
     console.error('   variables:', variables)
   },
   //// use key factory?
-  onSettled: () => queryCache.invalidateQueries({ key: ['distributors'] }),
+  onSettled: () => queryCache.invalidateQueries({ key: ['customers'] }),
 })
 
 const {
-  mutate: editDistributorMutate,
-  // status: createDistributorStatus, ////
-  // asyncStatus: editDistributorAsyncStatus, //// dont' use?
-  isLoading: editDistributorLoading,
-  reset: editDistributorReset,
-  error: editDistributorError,
+  mutate: editCustomerMutate,
+  // status: createCustomerStatus, ////
+  // asyncStatus: editCustomerAsyncStatus, //// dont' use?
+  isLoading: editCustomerLoading,
+  reset: editCustomerReset,
+  error: editCustomerError,
 } = useMutation({
-  mutation: (distributor: Distributor) => {
-    return putDistributor(distributor)
+  mutation: (customer: Customer) => {
+    return putCustomer(customer)
   },
   onSuccess(data, vars, context) {
     // show success notification after drawer closes
     setTimeout(() => {
       notificationsStore.createNotification({
         kind: 'success',
-        title: t('distributors.distributor_saved'),
+        title: t('customers.customer_saved'),
         description: t('common.object_saved_successfully', {
           name: vars.name,
         }),
@@ -99,17 +94,17 @@ const {
 
     closeDrawer()
 
-    console.log('distributor edited', data) ////
+    console.log('customer edited', data) ////
     console.log('   vars', vars) ////
     console.log('   context', context) ////
   },
   onError: (error, variables) => {
     ////
-    console.error('Error editing distributor:', error)
+    console.error('Error editing customer:', error)
     console.error('   variables:', variables)
   },
   //// use key factory?
-  onSettled: () => queryCache.invalidateQueries({ key: ['distributors'] }),
+  onSettled: () => queryCache.invalidateQueries({ key: ['customers'] }),
 })
 
 const name = ref('')
@@ -121,7 +116,7 @@ const validationIssues = ref<Record<string, string[]>>({})
 const firstErrorRef = ref()
 
 const saving = computed(() => {
-  return createDistributorLoading.value || editDistributorLoading.value
+  return createCustomerLoading.value || editCustomerLoading.value
 })
 
 watch(
@@ -131,13 +126,13 @@ watch(
       clearErrors()
       focusElement(nameRef)
 
-      if (currentDistributor) {
-        // editing distributor
-        name.value = currentDistributor.name
-        description.value = currentDistributor.description || ''
+      if (currentCustomer) {
+        // editing customer
+        name.value = currentCustomer.name
+        description.value = currentCustomer.description || ''
         ////
       } else {
-        // creating distributor, reset form to defaults
+        // creating customer, reset form to defaults
         name.value = ''
         description.value = ''
         ////
@@ -151,16 +146,16 @@ function closeDrawer() {
 }
 
 function clearErrors() {
-  createDistributorReset()
-  editDistributorReset()
+  createCustomerReset()
+  editCustomerReset()
   validationIssues.value = {}
 }
 
-function validate(distributor: Distributor): boolean {
+function validate(customer: Customer): boolean {
   validationIssues.value = {}
   firstErrorRef.value = null
 
-  const validation = v.safeParse(DistributorSchema, distributor)
+  const validation = v.safeParse(CustomerSchema, customer)
 
   if (validation.success) {
     // no validation issues
@@ -195,20 +190,20 @@ function validate(distributor: Distributor): boolean {
   }
 }
 
-async function saveDistributor() {
+async function saveCustomer() {
   clearErrors()
 
-  const distributor: Distributor = {
+  const customer: Customer = {
     name: name.value,
     description: description.value,
   }
 
-  const isValidationOk = validate(distributor)
+  const isValidationOk = validate(customer)
   if (!isValidationOk) {
     return
   }
 
-  // loading.value.saveDistributor = true ////
+  // loading.value.saveCustomer = true ////
 
   ////
   // const payload: any = {
@@ -217,12 +212,12 @@ async function saveDistributor() {
   //   ipaddr: records.value,
   // }
 
-  if (currentDistributor?.id) {
-    // editing distributor
-    distributor.id = currentDistributor.id
-    editDistributorMutate(distributor)
+  if (currentCustomer?.id) {
+    // editing customer
+    customer.id = currentCustomer.id
+    editCustomerMutate(customer)
   } else {
-    createDistributorMutate(distributor)
+    createCustomerMutate(customer)
   }
 
   // try { ////
@@ -239,7 +234,7 @@ async function saveDistributor() {
   //     error.value.saveHostSetDetails = err.toString()
   //   }
   // } finally {
-  //   loading.value.saveDistributor = false
+  //   loading.value.saveCustomer = false
   // }
 }
 </script>
@@ -247,11 +242,7 @@ async function saveDistributor() {
 <template>
   <NeSideDrawer
     :is-shown="isShown"
-    :title="
-      currentDistributor
-        ? $t('distributors.edit_distributor')
-        : $t('distributors.create_distributor')
-    "
+    :title="currentCustomer ? $t('customers.edit_customer') : $t('customers.create_customer')"
     :close-aria-label="$t('common.shell.close_side_drawer')"
     @close="closeDrawer"
   >
@@ -261,7 +252,7 @@ async function saveDistributor() {
         <NeTextInput
           ref="nameRef"
           v-model.trim="name"
-          :label="$t('distributors.name')"
+          :label="$t('customers.name')"
           :invalid-message="validationIssues.name?.[0] ? $t(validationIssues.name[0]) : ''"
           :disabled="saving"
         />
@@ -269,25 +260,25 @@ async function saveDistributor() {
         <NeTextInput
           ref="descriptionRef"
           v-model.trim="description"
-          :label="$t('distributors.description')"
+          :label="$t('customers.description')"
           :invalid-message="
             validationIssues.description?.[0] ? $t(validationIssues.description[0]) : ''
           "
           :disabled="saving"
         />
-        <!-- create distributor error notification -->
+        <!-- create customer error notification -->
         <NeInlineNotification
-          v-if="createDistributorError?.message"
+          v-if="createCustomerError?.message"
           kind="error"
-          :title="t('distributors.cannot_create_distributor')"
-          :description="createDistributorError.message"
+          :title="t('customers.cannot_create_customer')"
+          :description="createCustomerError.message"
         />
-        <!-- edit distributor error notification -->
+        <!-- edit customer error notification -->
         <NeInlineNotification
-          v-if="editDistributorError?.message"
+          v-if="editCustomerError?.message"
           kind="error"
-          :title="t('distributors.cannot_save_distributor')"
-          :description="editDistributorError.message"
+          :title="t('customers.cannot_save_customer')"
+          :description="editCustomerError.message"
         />
       </div>
       <!-- footer -->
@@ -308,13 +299,9 @@ async function saveDistributor() {
           size="lg"
           :disabled="saving"
           :loading="saving"
-          @click.prevent="saveDistributor"
+          @click.prevent="saveCustomer"
         >
-          {{
-            currentDistributor
-              ? $t('distributors.save_distributor')
-              : $t('distributors.create_distributor')
-          }}
+          {{ currentCustomer ? $t('customers.save_customer') : $t('customers.create_customer') }}
         </NeButton>
       </div>
     </form>

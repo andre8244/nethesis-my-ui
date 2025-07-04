@@ -5,8 +5,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardView.vue'
 import LoginRedirectView from '../views/LoginRedirectView.vue'
 import LoginView from '../views/LoginView.vue'
-import DistributorsView from '../views/DistributorsView.vue'
-import ResellersView from '@/views/ResellersView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,27 +32,24 @@ const router = createRouter({
     {
       path: '/distributors',
       name: 'distributors',
-      component: DistributorsView,
+      component: () => import('../views/DistributorsView.vue'),
     },
     {
       path: '/resellers',
       name: 'resellers',
-      component: ResellersView,
+      component: () => import('../views/ResellersView.vue'),
     },
     {
-      //// remove
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/customers',
+      name: 'customers',
+      component: () => import('../views/CustomersView.vue'),
     },
-    {
-      path: '/test/subtest',
-      name: 'subtest',
-      component: () => import('../views/SubTestView.vue'),
-    },
+    //// remove
+    // {
+    //   path: '/test/subtest',
+    //   name: 'subtest',
+    //   component: () => import('../views/SubTestView.vue'),
+    // },
   ],
 })
 

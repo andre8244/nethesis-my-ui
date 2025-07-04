@@ -7,9 +7,9 @@ import { useLoginStore } from '@/stores/login'
 import * as v from 'valibot'
 
 //// check attributes
-export const DistributorSchema = v.object({
+export const ResellerSchema = v.object({
   id: v.optional(v.string()),
-  name: v.pipe(v.string(), v.nonEmpty('distributors.name_required')),
+  name: v.pipe(v.string(), v.nonEmpty('resellers.name_required')),
   description: v.optional(v.string()),
   branding: v.optional(
     v.object({
@@ -32,62 +32,60 @@ export const DistributorSchema = v.object({
       phone: v.optional(v.string()),
       region: v.optional(v.string()),
       territory: v.optional(v.array(v.string())),
-      // type: v.literal('distributor'), ////
       website: v.optional(v.string()),
     }),
   ),
-  // type: v.literal('distributor'), ////
   isMfaRequired: v.optional(v.boolean()),
 })
 
-export type Distributor = v.InferOutput<typeof DistributorSchema>
+export type Reseller = v.InferOutput<typeof ResellerSchema>
 
-export const getDistributors = () => {
-  console.log('getDistributors') ////
+export const getResellers = () => {
+  console.log('getResellers') ////
 
   const loginStore = useLoginStore()
 
   return axios
-    .get(`${API_URL}/distributors`, {
+    .get(`${API_URL}/resellers`, {
       headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
     })
-    .then((res) => res.data.data.distributors as Distributor[])
+    .then((res) => res.data.data.resellers as Reseller[])
 }
 
-export const postDistributor = (distributor: Distributor) => {
-  console.log('postDistributor', distributor) ////
+export const postReseller = (reseller: Reseller) => {
+  console.log('postReseller', reseller) ////
 
   const loginStore = useLoginStore()
 
-  return axios.post(`${API_URL}/distributors`, distributor, {
+  return axios.post(`${API_URL}/resellers`, reseller, {
     headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
   })
 }
 
-export const putDistributor = (distributor: Distributor) => {
-  console.log('putDistributor', distributor) ////
+export const putReseller = (reseller: Reseller) => {
+  console.log('putReseller', reseller) ////
 
   const loginStore = useLoginStore()
 
-  return axios.put(`${API_URL}/distributors/${distributor.id}`, distributor, {
+  return axios.put(`${API_URL}/resellers/${reseller.id}`, reseller, {
     headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
   })
 }
 
-export const deleteDistributor = (distributor: Distributor) => {
-  console.log('deleteDistributor', distributor) ////
+export const deleteReseller = (reseller: Reseller) => {
+  console.log('deleteReseller', reseller) ////
 
   const loginStore = useLoginStore()
 
-  return axios.delete(`${API_URL}/distributors/${distributor.id}`, {
+  return axios.delete(`${API_URL}/resellers/${reseller.id}`, {
     headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
   })
 }
 
-export const searchStringInDistributor = (
+export const searchStringInReseller = (
   searchString: string,
 
-  distributor: Distributor,
+  reseller: Reseller,
 ): boolean => {
   const regex = /[^a-zA-Z0-9-]/g
   searchString = searchString.replace(regex, '')
@@ -95,7 +93,7 @@ export const searchStringInDistributor = (
 
   // search in string attributes
   found = ['name', 'description'].some((attrName) => {
-    const attrValue = distributor[attrName as keyof Distributor] as string
+    const attrValue = reseller[attrName as keyof Reseller] as string
     return new RegExp(searchString, 'i').test(attrValue?.replace(regex, ''))
   })
 
@@ -116,8 +114,8 @@ export const searchStringInDistributor = (
     'phone',
     'region',
   ].some((attrName) => {
-    const attrValue = distributor.customData?.[
-      attrName as keyof NonNullable<Distributor['customData']>
+    const attrValue = reseller.customData?.[
+      attrName as keyof NonNullable<Reseller['customData']>
     ] as string
     return new RegExp(searchString, 'i').test(attrValue?.replace(regex, ''))
   })

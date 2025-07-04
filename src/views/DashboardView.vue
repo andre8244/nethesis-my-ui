@@ -8,6 +8,7 @@ import { useLoginStore } from '@/stores/login'
 import {
   faArrowUpRightFromSquare,
   faAward,
+  faGraduationCap,
   faHeadset,
   faShop,
   faWarehouse,
@@ -43,8 +44,8 @@ const loginStore = useLoginStore()
                 {{ $t('dashboard.welcome_user', { user: loginStore.userDisplayName }) }}
               </NeHeading>
               <NeBadge
-                v-if="loginStore.userInfo?.orgName"
-                :text="loginStore.userInfo?.orgName"
+                v-if="loginStore.userInfo?.orgRole"
+                :text="loginStore.userInfo?.orgRole"
                 :icon="faAward"
                 kind="primary"
                 size="xs"
@@ -142,7 +143,7 @@ const loginStore = useLoginStore()
           <div class="flex flex-col items-start gap-3">
             <div class="flex items-center gap-3">
               <NeRoundedIcon
-                :customIcon="faHeadset"
+                :customIcon="faGraduationCap"
                 customBackgroundClasses="bg-indigo-100 dark:bg-indigo-800"
                 customForegroundClasses="text-indigo-700 dark:text-indigo-50"
               />

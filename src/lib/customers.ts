@@ -7,9 +7,9 @@ import { useLoginStore } from '@/stores/login'
 import * as v from 'valibot'
 
 //// check attributes
-export const DistributorSchema = v.object({
+export const CustomerSchema = v.object({
   id: v.optional(v.string()),
-  name: v.pipe(v.string(), v.nonEmpty('distributors.name_required')),
+  name: v.pipe(v.string(), v.nonEmpty('customers.name_required')),
   description: v.optional(v.string()),
   branding: v.optional(
     v.object({
@@ -32,62 +32,62 @@ export const DistributorSchema = v.object({
       phone: v.optional(v.string()),
       region: v.optional(v.string()),
       territory: v.optional(v.array(v.string())),
-      // type: v.literal('distributor'), ////
+      // type: v.literal('customer'), ////
       website: v.optional(v.string()),
     }),
   ),
-  // type: v.literal('distributor'), ////
+  // type: v.literal('customer'), ////
   isMfaRequired: v.optional(v.boolean()),
 })
 
-export type Distributor = v.InferOutput<typeof DistributorSchema>
+export type Customer = v.InferOutput<typeof CustomerSchema>
 
-export const getDistributors = () => {
-  console.log('getDistributors') ////
+export const getCustomers = () => {
+  console.log('getCustomers') ////
 
   const loginStore = useLoginStore()
 
   return axios
-    .get(`${API_URL}/distributors`, {
+    .get(`${API_URL}/customers`, {
       headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
     })
-    .then((res) => res.data.data.distributors as Distributor[])
+    .then((res) => res.data.data.customers as Customer[])
 }
 
-export const postDistributor = (distributor: Distributor) => {
-  console.log('postDistributor', distributor) ////
+export const postCustomer = (customer: Customer) => {
+  console.log('postCustomer', customer) ////
 
   const loginStore = useLoginStore()
 
-  return axios.post(`${API_URL}/distributors`, distributor, {
+  return axios.post(`${API_URL}/customers`, customer, {
     headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
   })
 }
 
-export const putDistributor = (distributor: Distributor) => {
-  console.log('putDistributor', distributor) ////
+export const putCustomer = (customer: Customer) => {
+  console.log('putCustomer', customer) ////
 
   const loginStore = useLoginStore()
 
-  return axios.put(`${API_URL}/distributors/${distributor.id}`, distributor, {
+  return axios.put(`${API_URL}/customers/${customer.id}`, customer, {
     headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
   })
 }
 
-export const deleteDistributor = (distributor: Distributor) => {
-  console.log('deleteDistributor', distributor) ////
+export const deleteCustomer = (customer: Customer) => {
+  console.log('deleteCustomer', customer) ////
 
   const loginStore = useLoginStore()
 
-  return axios.delete(`${API_URL}/distributors/${distributor.id}`, {
+  return axios.delete(`${API_URL}/customers/${customer.id}`, {
     headers: { Authorization: `Bearer ${loginStore.jwtToken}` },
   })
 }
 
-export const searchStringInDistributor = (
+export const searchStringInCustomer = (
   searchString: string,
 
-  distributor: Distributor,
+  customer: Customer,
 ): boolean => {
   const regex = /[^a-zA-Z0-9-]/g
   searchString = searchString.replace(regex, '')
@@ -95,7 +95,7 @@ export const searchStringInDistributor = (
 
   // search in string attributes
   found = ['name', 'description'].some((attrName) => {
-    const attrValue = distributor[attrName as keyof Distributor] as string
+    const attrValue = customer[attrName as keyof Customer] as string
     return new RegExp(searchString, 'i').test(attrValue?.replace(regex, ''))
   })
 
@@ -116,8 +116,8 @@ export const searchStringInDistributor = (
     'phone',
     'region',
   ].some((attrName) => {
-    const attrValue = distributor.customData?.[
-      attrName as keyof NonNullable<Distributor['customData']>
+    const attrValue = customer.customData?.[
+      attrName as keyof NonNullable<Customer['customData']>
     ] as string
     return new RegExp(searchString, 'i').test(attrValue?.replace(regex, ''))
   })

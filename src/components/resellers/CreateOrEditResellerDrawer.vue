@@ -12,12 +12,7 @@ import {
   NeInlineNotification,
 } from '@nethesis/vue-components'
 import { computed, ref, watch } from 'vue'
-import {
-  DistributorSchema,
-  postDistributor,
-  putDistributor,
-  type Distributor,
-} from '@/lib/distributors'
+import { ResellerSchema, postReseller, putReseller, type Reseller } from '@/lib/resellers'
 import * as v from 'valibot'
 import { useMutation, useQueryCache } from '@pinia/colada'
 import { useNotificationsStore } from '@/stores/notifications'
@@ -27,9 +22,9 @@ import { useI18n } from 'vue-i18n'
 
 //// search "host" occurrences
 
-const { isShown = false, currentDistributor = undefined } = defineProps<{
+const { isShown = false, currentReseller = undefined } = defineProps<{
   isShown: boolean
-  currentDistributor: Distributor | undefined
+  currentReseller: Reseller | undefined
 }>()
 
 const emit = defineEmits(['close'])
@@ -39,20 +34,20 @@ const queryCache = useQueryCache()
 const notificationsStore = useNotificationsStore()
 
 const {
-  mutate: createDistributorMutate,
-  isLoading: createDistributorLoading,
-  reset: createDistributorReset,
-  error: createDistributorError,
+  mutate: createResellerMutate,
+  isLoading: createResellerLoading,
+  reset: createResellerReset,
+  error: createResellerError,
 } = useMutation({
-  mutation: (newDistributor: Distributor) => {
-    return postDistributor(newDistributor)
+  mutation: (newReseller: Reseller) => {
+    return postReseller(newReseller)
   },
   onSuccess(data, vars, context) {
     // show success notification after drawer closes
     setTimeout(() => {
       notificationsStore.createNotification({
         kind: 'success',
-        title: t('distributors.distributor_created'),
+        title: t('resellers.reseller_created'),
         description: t('common.object_created_successfully', {
           name: vars.name,
         }),
@@ -61,36 +56,36 @@ const {
 
     closeDrawer()
 
-    console.log('distributor created', data) ////
+    console.log('reseller created', data) ////
     console.log('   vars', vars) ////
     console.log('   context', context) ////
   },
   onError: (error, variables) => {
     ////
-    console.error('Error creating distributor:', error)
+    console.error('Error creating reseller:', error)
     console.error('   variables:', variables)
   },
   //// use key factory?
-  onSettled: () => queryCache.invalidateQueries({ key: ['distributors'] }),
+  onSettled: () => queryCache.invalidateQueries({ key: ['resellers'] }),
 })
 
 const {
-  mutate: editDistributorMutate,
-  // status: createDistributorStatus, ////
-  // asyncStatus: editDistributorAsyncStatus, //// dont' use?
-  isLoading: editDistributorLoading,
-  reset: editDistributorReset,
-  error: editDistributorError,
+  mutate: editResellerMutate,
+  // status: createResellerStatus, ////
+  // asyncStatus: editResellerAsyncStatus, //// dont' use?
+  isLoading: editResellerLoading,
+  reset: editResellerReset,
+  error: editResellerError,
 } = useMutation({
-  mutation: (distributor: Distributor) => {
-    return putDistributor(distributor)
+  mutation: (reseller: Reseller) => {
+    return putReseller(reseller)
   },
   onSuccess(data, vars, context) {
     // show success notification after drawer closes
     setTimeout(() => {
       notificationsStore.createNotification({
         kind: 'success',
-        title: t('distributors.distributor_saved'),
+        title: t('resellers.reseller_saved'),
         description: t('common.object_saved_successfully', {
           name: vars.name,
         }),
@@ -99,17 +94,17 @@ const {
 
     closeDrawer()
 
-    console.log('distributor edited', data) ////
+    console.log('reseller edited', data) ////
     console.log('   vars', vars) ////
     console.log('   context', context) ////
   },
   onError: (error, variables) => {
     ////
-    console.error('Error editing distributor:', error)
+    console.error('Error editing reseller:', error)
     console.error('   variables:', variables)
   },
   //// use key factory?
-  onSettled: () => queryCache.invalidateQueries({ key: ['distributors'] }),
+  onSettled: () => queryCache.invalidateQueries({ key: ['resellers'] }),
 })
 
 const name = ref('')
@@ -121,7 +116,7 @@ const validationIssues = ref<Record<string, string[]>>({})
 const firstErrorRef = ref()
 
 const saving = computed(() => {
-  return createDistributorLoading.value || editDistributorLoading.value
+  return createResellerLoading.value || editResellerLoading.value
 })
 
 watch(
@@ -131,13 +126,13 @@ watch(
       clearErrors()
       focusElement(nameRef)
 
-      if (currentDistributor) {
-        // editing distributor
-        name.value = currentDistributor.name
-        description.value = currentDistributor.description || ''
+      if (currentReseller) {
+        // editing reseller
+        name.value = currentReseller.name
+        description.value = currentReseller.description || ''
         ////
       } else {
-        // creating distributor, reset form to defaults
+        // creating reseller, reset form to defaults
         name.value = ''
         description.value = ''
         ////
@@ -151,16 +146,16 @@ function closeDrawer() {
 }
 
 function clearErrors() {
-  createDistributorReset()
-  editDistributorReset()
+  createResellerReset()
+  editResellerReset()
   validationIssues.value = {}
 }
 
-function validate(distributor: Distributor): boolean {
+function validate(reseller: Reseller): boolean {
   validationIssues.value = {}
   firstErrorRef.value = null
 
-  const validation = v.safeParse(DistributorSchema, distributor)
+  const validation = v.safeParse(ResellerSchema, reseller)
 
   if (validation.success) {
     // no validation issues
@@ -195,20 +190,20 @@ function validate(distributor: Distributor): boolean {
   }
 }
 
-async function saveDistributor() {
+async function saveReseller() {
   clearErrors()
 
-  const distributor: Distributor = {
+  const reseller: Reseller = {
     name: name.value,
     description: description.value,
   }
 
-  const isValidationOk = validate(distributor)
+  const isValidationOk = validate(reseller)
   if (!isValidationOk) {
     return
   }
 
-  // loading.value.saveDistributor = true ////
+  // loading.value.saveReseller = true ////
 
   ////
   // const payload: any = {
@@ -217,12 +212,12 @@ async function saveDistributor() {
   //   ipaddr: records.value,
   // }
 
-  if (currentDistributor?.id) {
-    // editing distributor
-    distributor.id = currentDistributor.id
-    editDistributorMutate(distributor)
+  if (currentReseller?.id) {
+    // editing reseller
+    reseller.id = currentReseller.id
+    editResellerMutate(reseller)
   } else {
-    createDistributorMutate(distributor)
+    createResellerMutate(reseller)
   }
 
   // try { ////
@@ -239,7 +234,7 @@ async function saveDistributor() {
   //     error.value.saveHostSetDetails = err.toString()
   //   }
   // } finally {
-  //   loading.value.saveDistributor = false
+  //   loading.value.saveReseller = false
   // }
 }
 </script>
@@ -247,11 +242,7 @@ async function saveDistributor() {
 <template>
   <NeSideDrawer
     :is-shown="isShown"
-    :title="
-      currentDistributor
-        ? $t('distributors.edit_distributor')
-        : $t('distributors.create_distributor')
-    "
+    :title="currentReseller ? $t('resellers.edit_reseller') : $t('resellers.create_reseller')"
     :close-aria-label="$t('common.shell.close_side_drawer')"
     @close="closeDrawer"
   >
@@ -261,7 +252,7 @@ async function saveDistributor() {
         <NeTextInput
           ref="nameRef"
           v-model.trim="name"
-          :label="$t('distributors.name')"
+          :label="$t('resellers.name')"
           :invalid-message="validationIssues.name?.[0] ? $t(validationIssues.name[0]) : ''"
           :disabled="saving"
         />
@@ -269,25 +260,25 @@ async function saveDistributor() {
         <NeTextInput
           ref="descriptionRef"
           v-model.trim="description"
-          :label="$t('distributors.description')"
+          :label="$t('resellers.description')"
           :invalid-message="
             validationIssues.description?.[0] ? $t(validationIssues.description[0]) : ''
           "
           :disabled="saving"
         />
-        <!-- create distributor error notification -->
+        <!-- create reseller error notification -->
         <NeInlineNotification
-          v-if="createDistributorError?.message"
+          v-if="createResellerError?.message"
           kind="error"
-          :title="t('distributors.cannot_create_distributor')"
-          :description="createDistributorError.message"
+          :title="t('resellers.cannot_create_reseller')"
+          :description="createResellerError.message"
         />
-        <!-- edit distributor error notification -->
+        <!-- edit reseller error notification -->
         <NeInlineNotification
-          v-if="editDistributorError?.message"
+          v-if="editResellerError?.message"
           kind="error"
-          :title="t('distributors.cannot_save_distributor')"
-          :description="editDistributorError.message"
+          :title="t('resellers.cannot_save_reseller')"
+          :description="editResellerError.message"
         />
       </div>
       <!-- footer -->
@@ -308,13 +299,9 @@ async function saveDistributor() {
           size="lg"
           :disabled="saving"
           :loading="saving"
-          @click.prevent="saveDistributor"
+          @click.prevent="saveReseller"
         >
-          {{
-            currentDistributor
-              ? $t('distributors.save_distributor')
-              : $t('distributors.create_distributor')
-          }}
+          {{ currentReseller ? $t('resellers.save_reseller') : $t('resellers.create_reseller') }}
         </NeButton>
       </div>
     </form>
